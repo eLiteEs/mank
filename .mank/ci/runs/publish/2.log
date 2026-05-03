@@ -5,3 +5,24 @@ Steps: 3
 ---
 
 $ git add .
+
+$ git commit -m "sync from mank"
+[main 99f689f] sync from mank
+ 17 files changed, 640 insertions(+), 15 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/2.log
+ create mode 100644 .mank/objects/08/eb8d07235c3f85cd3a2e02a679deff84241f256de164b1e1f1ea438f2aa0e5
+ create mode 100644 .mank/objects/2d/d6e941f3ab2ca4295427e29e522cbd6ef9ce34e63030b597da7768eada095c
+ create mode 100644 .mank/objects/33/c1f3b65052f7012ae53a01eb03c3672cb4c969b295090c9ae73c0f1231f95f
+ create mode 100644 .mank/objects/3e/b7d9c7a3e5d7233f140c0c84c9c4a5a3b05c69cb2d6fa5cf2868517dc84404
+ create mode 100644 .mank/objects/46/123038266a3fa5f8d3c9fee9d0e81ef98e0c088e961ca2bbaf10bc8ea47888
+ create mode 100644 .mank/objects/47/df3c5513da508e40abe9af377b1ebdaa91a1ba77deac1b98c4ef5cec9929ca
+ create mode 100644 .mank/objects/48/83b048a1e2802ba3760c087cf96749c52bc51f11ea8b9f26b2c29a47b56b3b
+ create mode 100644 .mank/objects/59/3daaff23f787a2076834e2df705afa1314112b50e38b074029d2ab77a9060f
+
+$ git push -u origin main
+To github.com:eLiteEs/mank.git
+   cd62c2a..99f689f  main -> main
+branch 'main' set up to track 'origin/main'.
+
+--- Exit code: 0 ---
+sh: 1: notify-send: not found

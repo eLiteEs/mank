@@ -27,7 +27,7 @@
 #include <filesystem>
 #include "pager.hpp"
 
-#define BUILDING_CMAKE true
+#define BUILDING_CMAKE false
 
 std::string getExecutablePath() {
     if(BUILDING_CMAKE) {

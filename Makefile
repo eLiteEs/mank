@@ -1,26 +1,33 @@
-CXX 	  := g++
-CXXFLAGS  := -std=c++17 -Wall -Wextra -Iinclude
-LIBS 	  := -lssl -lcrypto -lz
+PREFIX := $(HOME)/.local
+BINARY := build/mank
+MAN_DIR := man
 
-SRC_DIR   := src
-BUILD_DIR := build
-TARGET    := mank
+.PHONY: all build configure install uninstall clean
 
+all: build
 
-SRCS := $(wildcard $(SRC_DIR)/*.cpp)
-OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
+configure:
+	cmake -B build
 
+build: configure
+	cmake --build build
 
-all: $(TARGET)
+install: build
+	@echo "Installing mank..."
+	install -Dm755 $(BINARY) $(PREFIX)/bin/mank
+	mkdir -p $(PREFIX)/bin/man
+	cp $(MAN_DIR)/* $(PREFIX)/bin/man/
+	@if ! grep -q 'MANK_MAN_PATH' ~/.bashrc; then \
+		echo 'export MANK_MAN_PATH=$(PREFIX)/bin/man' >> ~/.bashrc; \
+	fi
+	@echo "Done. Restart your shell or run: source ~/.bashrc"
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LIBS)
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	mkdir -p $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+uninstall:
+	@echo "Uninstalling mank..."
+	rm -f $(PREFIX)/bin/mank
+	rm -rf $(PREFIX)/bin/man
+	@sed -i '/MANK_MAN_PATH/d' ~/.bashrc
+	@echo "Done."
 
 clean:
-	rm -rf $(BUILD_DIR) $(TARGET)
-
-.PHONY: all clean
+	rm -rf build
