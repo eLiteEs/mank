@@ -118,7 +118,9 @@ int main(int argc, char** argv) {
 		std::string manual = argv[2];
 		return Man::loadManual(manual);
 	} else if (!Objects::isRepo()) { // <-------------------------------------- Repository commands
-		Log::error("Not a mank repository.");
+		Log::error("Not inside a mank repository or invalid argument introduced.");
+		Log::info("Use \"mank help\" to get some help.");
+
 		return 1;
 	} else if(command == "add" || command == "-a") {
 		// This command is for adding files to the current commit
@@ -210,10 +212,5 @@ int main(int argc, char** argv) {
 			args.push_back(argv[i]);
 		return Mank::submodule(args);
 	}
-
-	// No valid argument was introduced, show an error
-	Log::error("Invalid argument introduced");
-	Log::info("Use \"mank help\" to get some help.");
-	return 1;
 }
 

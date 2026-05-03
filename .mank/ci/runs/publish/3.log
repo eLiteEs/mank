@@ -5,3 +5,20 @@ Steps: 3
 ---
 
 $ git add .
+
+$ git commit -m "sync from mank"
+[main 19c5387] sync from mank
+ 10 files changed, 56 insertions(+), 21 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/3.log
+ create mode 100644 .mank/objects/38/bde93ea61c8bc0d0ddfec33bbab5ecdc9d7da176b2f5e3478e5807c6d7028c
+ create mode 100644 .mank/objects/7d/1e9e28148d99d2b2148e1b85eb33ad4bb312b4419ed6c69376230f2b1dc9d2
+ create mode 100644 .mank/objects/a5/2cceaac54da9ec0447faf5e655056264418ebc727f5f99bc229c8198eedddb
+ create mode 100644 .mank/objects/ef/21d7593eca369fb8a3c82d2ce2a04da74e538f23c2c36c9b0bfd31742ab09c
+
+$ git push -u origin main
+To github.com:eLiteEs/mank.git
+   99f689f..19c5387  main -> main
+branch 'main' set up to track 'origin/main'.
+
+--- Exit code: 0 ---
+sh: 1: notify-send: not found
