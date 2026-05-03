@@ -3,6 +3,7 @@
 build/
 .cache/
 .vscode/
+.git/
 
 # Just random vim config
 compile_commands.json

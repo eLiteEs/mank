@@ -37,17 +37,14 @@ namespace fs = std::filesystem;
 
 struct Job {
     std::string name;
-    std::string run;
+    std::string run;                    // formato simple
+    std::vector<std::string> steps;     // formato multi-step
     std::vector<std::string> depends;
 };
 
-// Parsear el pipeline.yml
 static std::vector<Job> parsePipeline() {
     fs::path pipelinePath = fs::path(".mank") / "ci" / "pipeline.yml";
-    if (!fs::exists(pipelinePath)) {
-        //Log::error("No pipeline found at .mank/ci/pipeline.yml");
-        return {};
-    }
+    if (!fs::exists(pipelinePath)) return {};
 
     YAML::Node config = YAML::LoadFile(pipelinePath.string());
     std::vector<Job> jobs;
@@ -57,7 +54,15 @@ static std::vector<Job> parsePipeline() {
     for (const auto& entry : config["jobs"]) {
         Job job;
         job.name = entry.first.as<std::string>();
-        job.run  = entry.second["run"].as<std::string>();
+
+        // Soportar tanto "run:" como "steps:"
+        if (entry.second["run"]) {
+            job.run = entry.second["run"].as<std::string>();
+        } else if (entry.second["steps"]) {
+            for (const auto& step : entry.second["steps"])
+                if (step["run"])
+                    job.steps.push_back(step["run"].as<std::string>());
+        }
 
         if (entry.second["depends"])
             for (const auto& dep : entry.second["depends"])
@@ -112,7 +117,6 @@ static void launchJob(const Job& job) {
     }
 
     if (pid == 0) {
-        // Proceso hijo — redirigir stdout y stderr al log
         int fd = open(logFile.string().c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (fd < 0) _exit(1);
 
@@ -120,28 +124,51 @@ static void launchJob(const Job& job) {
         dup2(fd, STDERR_FILENO);
         close(fd);
 
-        // Escribir header en el log
         std::time_t now = std::time(nullptr);
         std::string header = "=== Job: " + job.name + " ===\n"
-                           + "Run: " + std::to_string(runNumber) + "\n"
-                           + "Date: " + std::string(std::ctime(&now))
-                           + "Command: " + job.run + "\n"
-                           + "---\n";
+                   + "Run: " + std::to_string(runNumber) + "\n"
+                   + "Date: " + std::string(std::ctime(&now));
+        if (!job.steps.empty()) {
+            header += "Steps: " + std::to_string(job.steps.size()) + "\n";
+        } else {
+            header += "Command: " + job.run + "\n";
+        }
+        header += "---\n";
         write(STDOUT_FILENO, header.c_str(), header.size());
 
-        // Ejecutar el comando
-        int ret = system(job.run.c_str());
+        int exitCode = 0;
 
-        // Escribir resultado
-        std::string footer = "\n--- Exit code: " + std::to_string(WEXITSTATUS(ret)) + " ---\n";
+        if (!job.steps.empty()) {
+            // Ejecutar steps en orden, parar si uno falla
+            for (const auto& step : job.steps) {
+                std::string stepHeader = "\n$ " + step + "\n";
+                write(STDOUT_FILENO, stepHeader.c_str(), stepHeader.size());
+
+                int ret = system(step.c_str());
+                exitCode = WEXITSTATUS(ret);
+
+                if (exitCode != 0) {
+                    std::string msg = "\n--- Step failed: " + step + " (exit " + std::to_string(exitCode) + ") ---\n";
+                    write(STDOUT_FILENO, msg.c_str(), msg.size());
+                    break;
+                }
+            }
+        } else {
+            // Formato simple con run:
+            std::string stepHeader = "\n$ " + job.run + "\n";
+            write(STDOUT_FILENO, stepHeader.c_str(), stepHeader.size());
+            int ret = system(job.run.c_str());
+            exitCode = WEXITSTATUS(ret);
+        }
+
+        std::string footer = "\n--- Exit code: " + std::to_string(exitCode) + " ---\n";
         write(STDOUT_FILENO, footer.c_str(), footer.size());
 
-        // Notificación del sistema
-        std::string status  = WEXITSTATUS(ret) == 0 ? "✓ passed" : "✗ failed";
+        std::string status = exitCode == 0 ? "✓ passed" : "✗ failed";
         std::string notifCmd = "notify-send \"mank ci\" \"" + job.name + " " + status + "\"";
         system(notifCmd.c_str());
 
-        _exit(WEXITSTATUS(ret));
+        _exit(exitCode);
     }
 
     // Proceso padre — no esperar, el job corre en segundo plano

@@ -1,14 +1,11 @@
 on:
   - commit
-  - merge
   - manual
 
 jobs:
-  build:
-    run: cmake --build build
+  publish:
+    steps:
+      - run: git add .
+      - run: git commit -m "sync from mank"
+      - run: git push -u origin main
     depends: []
-
-  test:
-    run: mank version
-    depends:
-      - build
