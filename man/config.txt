@@ -12,8 +12,10 @@ Usage:
 Examples:
     mank --config.name "Blas Fernández"
     mank --config.email "blas@example.com"
-    mank --config.name "Blas Fernández" --global
-    mank --config.email "blas@example.com" --global
+    mank --gconfig.name "Blas Fernández"
+    mank --gconfig.email "blas@example.com"
+
+For global configs, use --gconfig
 
 Config files:
     Local config:   .mank/config        (this repository only)

@@ -104,6 +104,12 @@ int main(int argc, char** argv) {
 		} else if(key == "name") {
 			return Mank::config("core", key, argv[2]);
 		}
+	} else if (command.substr(0, 10) == "--gconfig.") {
+		std::string key = command.substr(10); // "user" o "email"
+		if (argc < 3) { Log::error("Usage: mank --config." + key + " <value>"); return 1; }
+		if(key == "email" || key == "user") {
+			return Mank::config("user", key, argv[2], true);
+		}
 	} else if(command == "man") {
 		if(argc < 3) {
 			return Man::loadManual("index");

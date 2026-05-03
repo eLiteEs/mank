@@ -35,7 +35,7 @@ struct Mank {
 	static int stash();
 	static int stashPop();
 	static int merge(const std::string& branchName);
-	static int config(const std::string& section, const std::string& key, const std::string& value);
+	static int config(const std::string& section, const std::string& key, const std::string& value, bool global = false);
 	static int unstage(const std::string& filepath);	
 	static int tag(const std::string& name = "");
 	static int show(const std::string& hash);

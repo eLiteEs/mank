@@ -782,7 +782,7 @@ int Mank::merge(const std::string& branchName) {
 	return conflicts > 0 ? 1 : 0;
 }
 
-int Mank::config(const std::string& section, const std::string& key, const std::string& value) {
+int Mank::config(const std::string& section, const std::string& key, const std::string& value, bool global) {
     if (section == "user" && key != "name" && key != "email") {
         Log::error("Unknown config key: " + key);
         Log::info("Valid keys: --config.name, --config.email");
