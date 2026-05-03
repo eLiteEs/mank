@@ -1,0 +1,20 @@
+TAG
+===============
+Creates a named tag pointing to the current commit, or lists all
+existing tags.
+
+Usage:
+    mank tag
+    mank tag <name>
+    mank -t
+    mank -t <name>
+
+Examples:
+    mank tag                List all tags with their commit hashes.
+    mank tag v1.0.0         Create a tag called "v1.0.0" on the current commit.
+
+Notes:
+    - Tags are stored in .mank/refs/tags/.
+    - A tag cannot be created if one with the same name already exists.
+    - Tags are used by "mank checkout" and "mank release" to refer
+      to specific commits by name instead of hash.

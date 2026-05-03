@@ -1,0 +1,17 @@
+SWITCH
+===============
+Switches the working tree to another branch.
+
+Usage:
+    mank switch <branch>
+    mank -sw <branch>
+
+Examples:
+    mank switch main
+    mank switch feature-login
+
+Notes:
+    - The branch must exist before switching to it. Create it first
+      with "mank branch <name>".
+    - Uncommitted changes may conflict when switching. Stash them
+      first with "mank stash" if needed.

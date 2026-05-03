@@ -1,0 +1,14 @@
+on:
+  - commit
+  - merge
+  - manual
+
+jobs:
+  build:
+    run: cmake --build build
+    depends: []
+
+  test:
+    run: mank version
+    depends:
+      - build

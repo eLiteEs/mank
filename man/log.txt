@@ -1,0 +1,21 @@
+LOG
+===============
+Displays the commit history of the current branch, from the most
+recent commit to the oldest.
+
+Usage:
+    mank log
+    mank log --oneline
+    mank -l
+    mank -l --oneline
+
+Modes:
+    (default)       Shows full details for each commit: hash, date,
+                    author, email and message, separated by a divider.
+
+    --oneline       Shows a compact view with the short hash and
+                    message on a single line per commit.
+
+Examples:
+    mank log
+    mank log --oneline

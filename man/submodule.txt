@@ -1,0 +1,46 @@
+SUBMODULE
+===============
+Links another mank repository on disk as a subfolder of the current
+repository. The submodule folder is a symlink to the external repo.
+Each commit in the parent repo records the exact commit of the
+submodule at that point in time.
+
+Usage:
+    mank submodule add <repo-path> <target-path>
+    mank submodule update
+    mank submodule list
+    mank submodule remove <target-path>
+    mank -sm <subcommand>
+
+Subcommands:
+    add <repo> <path>   Link an existing mank repo at the given path.
+    update              Update all submodules to the latest commit of
+                        their respective repositories.
+    list                List all registered submodules with their current
+                        commit hash.
+    remove <path>       Unlink the submodule at the given path.
+
+Examples:
+    mank submodule add /home/blas/mylib libs/mylib
+    mank submodule list
+    mank submodule update
+    mank submodule remove libs/mylib
+
+HOW IT WORKS
+------------
+Submodules are registered in .mank/submodules:
+
+    [mylib]
+        path   = libs/mylib
+        repo   = /home/blas/mylib
+        commit = a1b2c3d4...
+
+The folder in your repository is a symlink pointing to the external
+repo. The commit recorded is the HEAD of that repo at the time of
+the last "mank submodule add" or "mank submodule update".
+
+Notes:
+    - "mank add ." skips submodule folders automatically. To modify
+      a submodule, go into its own repository and work there directly.
+    - "mank submodule update" always pulls the latest HEAD of each
+      submodule and updates the recorded commit accordingly.

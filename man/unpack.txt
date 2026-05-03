@@ -1,0 +1,25 @@
+UNPACK
+===============
+Extracts a .mank-pack file created with "mank pack" into the current
+directory. Automatically detects whether it is a full pack or a
+source-only pack.
+
+Usage:
+    mank unpack <file.mank-pack>
+
+Examples:
+    mank unpack myproject.mank-pack
+
+Behavior:
+    Source pack     Extracts the source files into the current directory.
+                    No repository is created. Run "mank init" afterwards
+                    if you want to start tracking the code.
+
+    Full pack       Extracts the entire .mank folder. The repository is
+                    fully restored with all history, branches and tags.
+                    You can use mank normally right away.
+
+Notes:
+    - Unpacking a full pack into a directory that already has a .mank
+      folder will show an error to avoid overwriting an existing repo.
+      Remove the .mank folder first if you intend to overwrite it.

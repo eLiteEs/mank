@@ -1,0 +1,20 @@
+CHECKOUT
+===============
+Restores the working tree to the state of a specific commit or tag.
+All tracked files are replaced with their versions from that commit.
+
+Usage:
+    mank checkout <tag>
+    mank checkout <hash>
+    mank -co <tag|hash>
+
+Examples:
+    mank checkout v1.0.0        Restore to the commit tagged as "v1.0.0".
+    mank checkout a1b2c3d4      Restore to a specific commit by hash.
+
+Notes:
+    - This overwrites your current files with the versions from the
+      target commit. Make sure to commit or stash any changes first.
+    - The index is updated to match the checked out state.
+    - This does not switch branches. If you want to go back to the
+      latest state of a branch, use "mank switch <branch>".

@@ -1,0 +1,7 @@
+VERSION
+===============
+Displays the current version of mank along with license information.
+
+Usage:
+    mank version
+    mank -v

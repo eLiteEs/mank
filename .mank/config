@@ -1,0 +1,9 @@
+[core]
+	name = mank
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+
+[user]
+	email = blas.fernandez0@proton.me
+	name = Blas Fernández

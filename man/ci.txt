@@ -1,0 +1,68 @@
+CI
+===============
+Runs and manages local CI/CD pipelines defined in .mank/ci/pipeline.yml.
+Jobs run as independent background processes and write their output
+to log files. A system notification is sent when a job finishes.
+
+Usage:
+    mank ci run                 Run all jobs in the pipeline.
+    mank ci run <job>           Run a specific job.
+    mank ci logs                Show the latest log of every job.
+    mank ci logs <job>          Show the latest log of a specific job.
+    mank ci logs <job> --all    Show all historical logs of a job.
+
+Examples:
+    mank ci run
+    mank ci run build
+    mank ci logs
+    mank ci logs test
+    mank ci logs build --all
+
+PIPELINE FORMAT
+---------------
+Create .mank/ci/pipeline.yml to define your pipeline:
+
+    on:
+      - commit
+      - merge
+      - release
+      - manual
+
+    jobs:
+      build:
+        run: make
+        depends: []
+
+      test:
+        run: ./run_tests.sh
+        depends:
+          - build
+
+      lint:
+        run: clang-tidy src/*.cpp
+        depends:
+          - build
+
+Triggers (on:):
+    commit      Runs automatically after "mank commit".
+    merge       Runs automatically after "mank merge".
+    release     Runs automatically after "mank release".
+    manual      Only runs when triggered with "mank ci run".
+
+Dependencies (depends:):
+    Jobs listed under "depends" must be defined in the pipeline.
+    They are resolved and launched in the correct order automatically.
+
+LOGS
+----
+Logs are stored in .mank/ci/runs/<job>/:
+    1.log, 2.log, 3.log ...     One file per run.
+    latest.log                  Always points to the most recent run.
+
+Each log includes the job name, run number, date, command and exit code.
+
+NOTIFICATIONS
+-------------
+When a job finishes, a system notification is sent via notify-send:
+    mank ci — build ✓ passed
+    mank ci — test ✗ failed

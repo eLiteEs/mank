@@ -1,0 +1,39 @@
+MANK MANUAL
+===============
+Welcome to the mank manual. Here you'll find detailed information
+about every command available in mank.
+
+Browse the manual using the "man" argument:
+    mank man <command>
+
+Examples:
+    mank man add
+    mank man commit
+    mank man diff
+
+INDEX OF MANUALS
+----------------
+help            Show a list of all commands.
+init            Initialize a new repository.
+version         Show the current version of mank.
+add             Stage files for committing.
+commit          Save staged changes as a commit.
+log             Display the commit history.
+status          Show staged and unstaged changes.
+diff            Show differences between files or commits.
+branch          Create or list branches.
+switch          Switch to another branch.
+restore         Discard unstaged changes in a file.
+stash           Save and restore uncommitted changes.
+merge           Merge a branch into the current one.
+dbranch         Display the current branch.
+config          Set user and repository configuration.
+unstage         Remove files from the index without touching disk.
+tag             Create or list tags.
+show            Show the contents and diff of a specific commit.
+checkout        Restore the working tree to a commit or tag.
+release         Generate a release from a tag.
+pack            Pack the repository for distribution or backup.
+unpack          Unpack a .mank-pack file.
+ci              Run and manage local CI/CD pipelines.
+submodule       Link and manage mank submodules.

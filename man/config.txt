@@ -1,0 +1,42 @@
+CONFIG
+===============
+Sets configuration values for mank. Configuration can be stored
+locally (per repository) or globally (for all repositories).
+
+Usage:
+    mank --config.name <value>
+    mank --config.email <value>
+    mank --config.name <value> --global
+    mank --config.email <value> --global
+
+Examples:
+    mank --config.name "Blas Fernández"
+    mank --config.email "blas@example.com"
+    mank --config.name "Blas Fernández" --global
+    mank --config.email "blas@example.com" --global
+
+Config files:
+    Local config:   .mank/config        (this repository only)
+    Global config:  ~/.mankconfig       (all repositories)
+
+Priority:
+    Local config always overrides global config. This means you can
+    set a global name and email, and override them per repository
+    if needed.
+
+Config file format:
+    [core]
+        name = myproject
+        repositoryformatversion = 0
+
+    [user]
+        name = Blas Fernández
+        email = blas@example.com
+
+    [network]
+        port = 6942
+
+Notes:
+    - The repository name under [core] is set automatically by
+      "mank init" using the folder name. You can change it with:
+          mank --config.name "new-name"

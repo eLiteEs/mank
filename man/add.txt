@@ -1,0 +1,39 @@
+ADD
+===============
+Stages files for the next commit. Only staged files are included
+when you run "mank commit".
+
+Usage:
+    mank add <file>
+    mank add <directory>
+    mank add .
+    mank -a <file|directory|.>
+
+Examples:
+    mank add main.cpp           Stage a single file.
+    mank add src/               Stage all files inside a directory recursively.
+    mank add .                  Stage everything in the repository recursively.
+
+Notes:
+    - Files already staged with no changes since the last add are
+      skipped automatically.
+    - Submodule folders are ignored by add. To update a submodule,
+      modify its own repository directly.
+
+IGNORING FILES
+--------------
+Create a .mankignore file in the root of your repository to exclude
+files and folders from being staged.
+
+Example .mankignore:
+    # Build output
+    *.o
+    build/
+    .cache/
+
+    # Editor files
+    compile_commands.json
+    *.swp
+
+Patterns follow standard glob syntax. Lines starting with # are comments.
+Trailing slashes on directory names are optional.

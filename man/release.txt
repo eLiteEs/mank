@@ -1,0 +1,36 @@
+RELEASE
+===============
+Generates a release from an existing tag. Creates a folder inside
+.mank/releases/<tag>/ containing a source zip, a text summary and
+an HTML page with the release details.
+
+Usage:
+    mank release <tag>
+
+Examples:
+    mank release v1.0.0
+
+Generated files:
+    .mank/releases/v1.0.0/
+        v1.0.0-source.zip       Source code of the tagged commit.
+        v1.0.0-release.txt      Plain text with commits, contributors and changelog.
+        v1.0.0-release.html     Same content formatted as an HTML page.
+
+Changelog:
+    When running "mank release", you will be asked how to generate
+    the changelog:
+
+        Changelog: (a)uto / (m)anual?
+
+    (a) auto    Generates the changelog automatically from commit
+                messages since the previous tag.
+
+    (m) manual  Opens your default editor ($EDITOR or nano) with a
+                template. Lines starting with # are ignored.
+                Save and close the file to continue.
+
+Notes:
+    - The tag must exist before creating a release. Create it first
+      with "mank tag <name>".
+    - If a CI pipeline is configured with "on: release", it will
+      run automatically after the release is generated.

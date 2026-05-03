@@ -1,0 +1,10 @@
+HELP
+===============
+Shows a summary of all available mank commands directly in the terminal.
+
+Usage:
+    mank help
+
+This is a quick reference. For detailed information about a specific
+command, use the manual instead:
+    mank man <command>

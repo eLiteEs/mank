@@ -1,0 +1,19 @@
+RESTORE
+===============
+Discards unstaged changes in a file, restoring it to its last
+committed version. This operation cannot be undone.
+
+Usage:
+    mank restore <file>
+    mank -r <file>
+
+Examples:
+    mank restore main.cpp       Restore main.cpp to its last committed state.
+
+Notes:
+    - This only affects files that are tracked (have been committed
+      at least once).
+    - This does NOT remove the file from the index. If you want to
+      unstage a file without touching disk, use "mank unstage".
+    - There is no way to recover discarded changes with restore.
+      If you are unsure, stash your changes first with "mank stash".

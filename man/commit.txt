@@ -1,0 +1,25 @@
+COMMIT
+===============
+Saves all staged files as a new commit in the current branch.
+Each commit stores a snapshot of the staged files along with a
+message, the author name and email, and a timestamp.
+
+Usage:
+    mank commit <message>
+    mank -c <message>
+
+Examples:
+    mank commit "fix: correct off-by-one error in parser"
+    mank -c "feat: add submodule support"
+
+Notes:
+    - You must stage files with "mank add" before committing.
+    - Committing with nothing staged will show an error.
+    - Committing when the index is identical to the last commit
+      will also show an error.
+    - Author name and email are read from the repository config
+      or from the global config (~/.mankconfig). Set them with:
+          mank --config.name "Your Name"
+          mank --config.email "you@example.com"
+    - If a CI pipeline is configured with "on: commit", it will
+      run automatically after a successful commit.

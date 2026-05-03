@@ -1,0 +1,22 @@
+SHOW
+===============
+Displays the details of a specific commit: its author, date, message,
+and a diff of what changed compared to its parent commit.
+
+Usage:
+    mank show <hash>
+
+Examples:
+    mank show a1b2c3d4e5f6...     Show a commit by its full hash.
+    mank show a1b2c3d4            Short hashes also work if unambiguous.
+
+Output:
+    - Commit hash, author, date and parent.
+    - Commit message.
+    - Per-file diff: lines added in green, removed in red.
+    - Files deleted in this commit are listed at the end.
+
+Notes:
+    - Output is shown through a pager. Use arrow keys or Page Up/Down
+      to scroll, and press q to exit.
+    - You can get commit hashes from "mank log" or "mank log --oneline".

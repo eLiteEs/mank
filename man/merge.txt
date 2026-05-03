@@ -1,0 +1,17 @@
+MERGE
+===============
+Merges another branch into the current branch. Changes from the
+target branch that are not in the current branch are applied.
+
+Usage:
+    mank merge <branch>
+    mank -mg <branch>
+
+Examples:
+    mank merge feature-login    Merge "feature-login" into the current branch.
+
+Notes:
+    - mank finds the common ancestor of both branches and applies
+      the changes from the target branch on top of the current one.
+    - If a CI pipeline is configured with "on: merge", it will
+      run automatically after a successful merge.

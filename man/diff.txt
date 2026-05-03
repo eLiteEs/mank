@@ -1,0 +1,23 @@
+DIFF
+===============
+Shows the differences between the current version of a file on disk
+and its last committed version. Can also compare two commits directly.
+
+Usage:
+    mank diff <file>
+    mank diff .
+    mank diff --commits <hash1> <hash2>
+    mank -d <file|.>
+
+Examples:
+    mank diff main.cpp              Show changes in main.cpp since last commit.
+    mank diff .                     Show changes in all modified tracked files.
+    mank diff --commits a1b2c3d4 e5f6a7b8
+                                    Compare two commits directly.
+
+Notes:
+    - Added lines are shown in green, removed lines in red.
+    - Output is displayed through a pager (less by default). You can
+      change the pager with the PAGER environment variable.
+    - When using --commits, the order of the hashes matters:
+      hash1 is treated as the "before" state and hash2 as "after".

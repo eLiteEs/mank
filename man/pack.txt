@@ -1,0 +1,27 @@
+PACK
+===============
+Packages the repository into a .mank-pack zip file for distribution
+or backup. The file name is taken from the repository name in config.
+
+Usage:
+    mank pack
+    mank pack --full
+
+Modes:
+    (default)   Packages only the source files from the last commit.
+                Does not include repository history or .mank folder.
+                Useful for distributing code to someone who does not
+                use mank.
+
+    --full      Packages the entire .mank folder including all objects,
+                history, branches, tags and config. The recipient can
+                unpack it and continue working with the full history.
+
+Output:
+    myproject.mank-pack     Created in the current directory.
+
+Notes:
+    - To restore a pack on another machine, use "mank unpack".
+    - The repository name is read from [core] name in .mank/config.
+      Change it with:
+          mank --config.name "my-project"

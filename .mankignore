@@ -1,0 +1,8 @@
+# Output build files
+*.o
+build/
+.cache/
+.vscode/
+
+# Just random vim config
+compile_commands.json

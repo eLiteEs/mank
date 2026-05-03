@@ -1,0 +1,22 @@
+INIT
+===============
+Initializes an empty mank repository in the current directory or in
+a specified directory. Creates a .mank folder with the repository
+structure and a default config file.
+
+Usage:
+    mank init
+    mank init <directory>
+    mank -i
+    mank -i <directory>
+
+Examples:
+    mank init               Initialize in the current directory.
+    mank init myproject     Initialize in a folder called "myproject".
+
+Notes:
+    - If a repository already exists in the target directory, mank
+      will warn you and exit without making any changes.
+    - The repository name is automatically set to the folder name.
+      You can change it later with:
+          mank --config.name "my-project"

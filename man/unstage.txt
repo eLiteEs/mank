@@ -1,0 +1,19 @@
+UNSTAGE
+===============
+Removes a file from the staging index without touching the file on
+disk. The opposite of "mank add".
+
+Usage:
+    mank unstage <file>
+    mank unstage .
+    mank -u <file|.>
+
+Examples:
+    mank unstage main.cpp       Remove main.cpp from the index.
+    mank unstage .              Remove all files from the index.
+
+Notes:
+    - This does not delete or modify the file on disk.
+    - To discard the actual changes in a file, use "mank restore".
+    - After unstaging, the file will appear as modified (not staged)
+      in "mank status".

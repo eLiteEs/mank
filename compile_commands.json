@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/home/blas/mank/",
+    "command": "g++ -std=c++17 -Wall -Wextra -Iinclude -c src/mank.cpp -o build/mank.o",
+    "file": "src/mank.cpp"
+  }
+]

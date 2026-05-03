@@ -1,0 +1,16 @@
+STATUS
+===============
+Shows the current state of the repository: which tracked files have
+been modified since the last commit, and which files are staged and
+ready to commit.
+
+Usage:
+    mank status
+    mank -s
+
+Output:
+    - Files listed as modified have changes on disk that differ from
+      the last commit but have not been staged yet.
+    - Files listed as staged have been added with "mank add" and are
+      ready to be committed.
+    - Files with no changes are not shown.

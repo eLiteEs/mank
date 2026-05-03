@@ -1,0 +1,23 @@
+STASH
+===============
+Saves your current uncommitted changes temporarily so you can work
+on something else, then reapplies them later.
+
+Usage:
+    mank stash              Save current changes to the stash.
+    mank stash pop          Reapply stashed changes.
+    mank -st
+    mank -st pop
+
+Workflow example:
+    mank stash              You are mid-way through a change but need
+                            to switch context. Stash saves it.
+    mank switch other-branch
+    ... do some work ...
+    mank switch original-branch
+    mank stash pop          Your changes come back.
+
+Notes:
+    - mank only keeps one stash at a time. Running "mank stash" again
+      will overwrite the previous stash.
+    - Stashed changes are stored in .mank/stash.

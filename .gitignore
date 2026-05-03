@@ -1,0 +1,7 @@
+.cache/
+.vscode/
+build/
+*.mank-pack
+compile-commands.json
+*.plist
+test/

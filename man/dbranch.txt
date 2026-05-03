@@ -1,0 +1,11 @@
+DBRANCH
+===============
+Displays the name of the branch you are currently working on.
+
+Usage:
+    mank dbranch
+    mank -db
+
+Notes:
+    - To list all branches, use "mank branch" with no arguments.
+    - To switch to a different branch, use "mank switch <branch>".
