@@ -30,10 +30,10 @@ cmake --build build
 
 The executable will be at `build/mank`.
 
-Optionally, install it system-wide:
-```bash
-sudo cp build/mank /usr/local/bin/
-```
+## Instalation
+```make install```
+
+This automatically installs mank in Linux for bash, if you use other shells, you may need to update your PATH manually.
 
 ## Quick start
 ```bash
