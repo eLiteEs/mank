@@ -40,7 +40,7 @@ namespace Objects {
 	std::vector<std::string> getHistory(const std::string& branchRef);
 	std::string commonAncestor(const std::string& branchA, const std::string& branchB);
 	std::string getConfig(const std::string& section, const std::string& key);
-	void setConfig(const std::string& section, const std::string& key, const std::string& value, bool global);
+	void setConfig(const std::string& section, const std::string& key, const std::string& value, bool global = false);
 	bool isRepo();
 	std::filesystem::path getRepoRoot();
 	void createTag(const std::string& name, const std::string& commitHash);

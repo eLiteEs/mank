@@ -789,7 +789,7 @@ int Mank::config(const std::string& section, const std::string& key, const std::
         return 1;
     }
 
-    Objects::setConfig(section, key, value, false);
+    Objects::setConfig(section, key, value, global);
     Log::log("Config updated: [" + section + "] " + key + " = " + value);
     return 0;
 }

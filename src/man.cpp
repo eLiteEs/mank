@@ -21,7 +21,6 @@
 
 #include <iostream>
 #include <string>
-#include <string.h>
 #include "log.hpp"
 #include <fstream>
 #include <filesystem>

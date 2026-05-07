@@ -97,6 +97,8 @@ int main(int argc, char** argv) {
 
 		return 0;
 	} else if (command.substr(0, 9) == "--config.") {
+		// Local config
+
 		std::string key = command.substr(9); // "user" o "email"
 		if (argc < 3) { Log::error("Usage: mank --config." + key + " <value>"); return 1; }
 		if(key == "email" || key == "user") {
@@ -105,8 +107,10 @@ int main(int argc, char** argv) {
 			return Mank::config("core", key, argv[2]);
 		}
 	} else if (command.substr(0, 10) == "--gconfig.") {
+		// Global config
+
 		std::string key = command.substr(10); // "user" o "email"
-		if (argc < 3) { Log::error("Usage: mank --config." + key + " <value>"); return 1; }
+		if (argc < 3) { Log::error("Usage: mank --gconfig." + key + " <value>"); return 1; }
 		if(key == "email" || key == "user") {
 			return Mank::config("user", key, argv[2], true);
 		}
@@ -168,8 +172,8 @@ int main(int argc, char** argv) {
 	} else if (command == "stash" || command == "-st") {
 		// Save file changes for using them later
 		if (argc >= 3 && std::string(argv[2]) == "pop")
-		// Using pop, get the changes again
-		return Mank::stashPop();
+			// Using pop, get the changes again
+			return Mank::stashPop();
 		return Mank::stash();
 	} else if (command == "merge" || command == "-mg") {
 		// Merge another branch with the current branch

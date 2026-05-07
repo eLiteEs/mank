@@ -7,3 +7,6 @@ build/
 
 # Just random vim config
 compile_commands.json
+
+# gdb config
+.gdbinit
