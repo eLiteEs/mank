@@ -148,7 +148,7 @@ int Mank::history(bool oneline) {
             std::cout << ansi::FG_CYAN << current.substr(0, 8) << ansi::RESET
                       << " " << message << "\n";
         } else {
-            std::cout << ansi::FG_CYAN << "commit: "  << ansi::RESET << current << "\n";
+            std::cout << ansi::FG_CYAN << "commit: "  << ansi::RESET << current.substr(0,16) << "\n";
             time_t t = std::stol(date);
             std::cout << ansi::FG_CYAN << "date: "    << ansi::RESET << std::ctime(&t);
             std::cout << ansi::FG_CYAN << "by: "      << ansi::RESET << user << "\n";

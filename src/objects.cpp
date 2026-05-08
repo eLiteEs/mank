@@ -33,14 +33,17 @@ namespace fs = std::filesystem;
 
 // Calculate the SHA-256 and return the result in hex 
 std::string Objects::hash(const std::string& content) {
-	unsigned char digest[SHA256_DIGEST_LENGTH];
-	SHA256(reinterpret_cast<const unsigned char*>(content.c_str()), content.size(), digest);
+    unsigned char digest[SHA256_DIGEST_LENGTH];
+    SHA256(reinterpret_cast<const unsigned char*>(content.c_str()), 
+           content.size(), digest);
 
-	std::ostringstream oss;
-	for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-		oss << std::hex << std::setw(2) << std::setfill('0') << (int)digest[i];
+    std::ostringstream oss;
+    // Only the first 8 bytes = 16 hex characters
+    for (int i = 0; i < 8; i++)
+        oss << std::hex << std::setw(2) << std::setfill('0') 
+            << (int)digest[i];
 
-	return oss.str();
+    return oss.str();  // 16 characters instead of 64
 }
 
 // Compress and save the content in .mank/objects/

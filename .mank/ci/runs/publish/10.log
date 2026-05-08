@@ -5,3 +5,25 @@ Steps: 3
 ---
 
 $ git add .
+
+$ git commit -m "sync from mank"
+[main d380afd] sync from mank
+ 17 files changed, 119 insertions(+), 6 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/10.log
+ delete mode 120000 .mank/ci/runs/publish/latest.log
+ create mode 100644 .mank/objects/06/3ed6e53814fb8bf158d4742a8a502088bf401a64a3f50c9f61f1d661ed768f
+ create mode 100644 .mank/objects/1d/4e4f7afabd90ef4091dbd3a93154656c9d4b458f5235dcc5259c1f0afa65b8
+ create mode 100644 .mank/objects/35/b3760f85e0080cd5712a7fb97001056356ba6ee925a30c51ad857d80e9489a
+ create mode 100644 .mank/objects/40/1437bc5d90daf76b2bddfa6a2ccaafe98bb988fa119cd053756c4f1b687a13
+ create mode 100644 .mank/objects/6d/b185a9abf011f5d3bc45c00bd25a617e58a4f52be0b80913ee416bece3ac4a
+ create mode 100644 .mank/refs/tags/v0.1.1
+ create mode 100644 .mank/releases/v0.1.0/v0.1.0-release.html
+ create mode 100644 .mank/releases/v0.1.0/v0.1.0-release.txt
+ create mode 100644 .mank/releases/v0.1.0/v0.1.0-source.zip
+
+$ git push -u origin main
+To github.com:eLiteEs/mank
+   f7d5371..d380afd  main -> main
+rama 'main' configurada para rastrear 'origin/main'.
+
+--- Exit code: 0 ---
