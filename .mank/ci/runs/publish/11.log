@@ -5,3 +5,71 @@ Steps: 3
 ---
 
 $ git add .
+
+$ git commit -m "sync from mank"
+[main 84fc5a3] sync from mank
+ 61 files changed, 87 insertions(+), 7 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/11.log
+ create mode 120000 .mank/ci/runs/publish/latest.log
+ create mode 100644 .mank/objects/05/79d7b0f302a40b
+ create mode 100644 .mank/objects/0b/7140bc2c80d882
+ create mode 100644 .mank/objects/1a/a0f6781414c5d7
+ create mode 100644 .mank/objects/30/1eea6a17e9ca8d
+ create mode 100644 .mank/objects/31/6bd320678446cc
+ create mode 100644 .mank/objects/35/189a7b87b9b11c
+ create mode 100644 .mank/objects/35/b3760f85e0080c
+ create mode 100644 .mank/objects/38/ee9c729063f416
+ create mode 100644 .mank/objects/3b/0ad6b01bdace3a
+ create mode 100644 .mank/objects/3b/4e4750435af65f
+ create mode 100644 .mank/objects/40/1437bc5d90daf7
+ create mode 100644 .mank/objects/43/30b4d88b15f5b6
+ create mode 100644 .mank/objects/48/2bdf7fc155a059
+ create mode 100644 .mank/objects/48/83b048a1e2802b
+ create mode 100644 .mank/objects/48/af0e575c6ace90
+ create mode 100644 .mank/objects/49/93430f931dd1aa
+ create mode 100644 .mank/objects/4c/cc41b23679cb31
+ create mode 100644 .mank/objects/4f/56bcc51fdebea4
+ create mode 100644 .mank/objects/52/7f4d001e8436ac
+ create mode 100644 .mank/objects/58/241e023d326081
+ create mode 100644 .mank/objects/5c/49c4f1682320eb
+ create mode 100644 .mank/objects/6d/b185a9abf011f5
+ create mode 100644 .mank/objects/6e/79a00ed6436838
+ create mode 100644 .mank/objects/70/0db02dae8507c7
+ create mode 100644 .mank/objects/78/ce4f6c45a5aa67
+ create mode 100644 .mank/objects/79/6d40528bbad3ed
+ create mode 100644 .mank/objects/7b/7a0822514133c1
+ create mode 100644 .mank/objects/7f/b39115b044284a
+ create mode 100644 .mank/objects/8f/33f6b962f55da1
+ create mode 100644 .mank/objects/95/00cba8b0a3eab1
+ create mode 100644 .mank/objects/97/3391884b589a28
+ create mode 100644 .mank/objects/99/a4dd99df81a02b
+ create mode 100644 .mank/objects/a4/e15e159eb1bcf2
+ create mode 100644 .mank/objects/a6/6d300fa95d2d40
+ create mode 100644 .mank/objects/ab/a1b3720ff257f1
+ create mode 100644 .mank/objects/af/b959cc1b77b029
+ create mode 100644 .mank/objects/b2/14205b41e1ce2c
+ create mode 100644 .mank/objects/b7/393445b41c469d
+ create mode 100644 .mank/objects/ba/9f8f6c107f8675
+ create mode 100644 .mank/objects/bc/a72b3eb01f87b5
+ create mode 100644 .mank/objects/bd/6323312b2fc4a9
+ create mode 100644 .mank/objects/c1/f6dd1d4440925e
+ create mode 100644 .mank/objects/c8/aca970cf831fee
+ create mode 100644 .mank/objects/d4/f34316976385b2
+ create mode 100644 .mank/objects/d5/b242bd6b7ad43d
+ create mode 100644 .mank/objects/e1/27ab5726c29b3c
+ create mode 100644 .mank/objects/e4/60531939775959
+ create mode 100644 .mank/objects/ea/544529c492ac34
+ create mode 100644 .mank/objects/ee/30e53424977368
+ create mode 100644 .mank/objects/f2/29e5e70622fdda
+ create mode 100644 .mank/objects/f3/6bf2272a7fdd46
+ create mode 100644 .mank/objects/f5/81ef33ec9831ea
+ create mode 100644 .mank/objects/f7/5cb5ad9eb61ed8
+ create mode 100644 .mank/objects/f9/707030d64f8ec0
+ create mode 100644 .mank/objects/ff/30a00999bb93d9
+
+$ git push -u origin main
+To github.com:eLiteEs/mank
+   d380afd..84fc5a3  main -> main
+rama 'main' configurada para rastrear 'origin/main'.
+
+--- Exit code: 0 ---

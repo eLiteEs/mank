@@ -228,7 +228,10 @@ std::vector<std::string> splitLines(const std::string& content) {
 }
 
 void printDiff(const std::vector<std::string>& oldLines,
-					  const std::vector<std::string>& newLines) {
+               const std::vector<std::string>& newLines,
+               const std::string& filepath,
+               const std::string& oldContent, 
+               const std::string& newContent) {
 	int n = oldLines.size(), m = newLines.size();
 
 	// Construir tabla LCS
@@ -292,6 +295,8 @@ void printDiff(const std::vector<std::string>& oldLines,
 		std::cout << "@@ -" << oldStart << "," << oldCount
 				  << " +" << newStart << "," << newCount << " @@\n";
 
+		int totalAdded = 0, totalRemoved = 0; // Count exact lines changed
+
 		// Líneas del hunk
 		while (k < end) {
 			char type = std::get<0>(diff[k]);
@@ -299,14 +304,54 @@ void printDiff(const std::vector<std::string>& oldLines,
 			if (type == '+') {
 				setColor(32, 180, 32);
 				std::cout << "+ " << line << "\n";
+				totalAdded++;
 			} else if (type == '-') {
 				setColor(201, 32, 32);
 				std::cout << "- " << line << "\n";
+				totalRemoved++;
 			} else {
 				resetColor();
 				std::cout << "  " << line << "\n";
 			}
 			k++;
+		}
+
+		// Show changes in lines
+		resetColor();
+		std::cout << std::endl << "Changes: ";
+		setColor(32, 180, 32);	std::cout << "+" << totalAdded;
+		setColor(32, 180, 220);	std::cout << "/";
+		setColor(201, 32, 32);	std::cout << "-" << totalRemoved << std::endl << std::endl;
+
+
+    		if (totalAdded > 0 || totalRemoved > 0) {
+        		std::cout << "\n";
+        		setColor(32, 180, 220);
+        		if (!filepath.empty()) {
+            			std::cout << filepath << " | ";
+        		}
+        		std::cout << totalAdded + totalRemoved << " changes: ";
+        
+        		if (totalAdded > 0) {
+            			setColor(32, 180, 32);
+            			std::cout << "+" << totalAdded;
+        		}
+        		if (totalAdded > 0 && totalRemoved > 0) {
+            			resetColor();
+            			std::cout << " ";
+        		}
+		        if (totalRemoved > 0) {
+            			setColor(201, 32, 32);
+            			std::cout << "-" << totalRemoved;
+        		}
+        
+        		// Tamaño del archivo si se proporciona
+        		if (!oldContent.empty() && !newContent.empty()) {
+            			resetColor();
+            			std::cout << " | " << oldContent.size() << " → " << newContent.size() << " bytes";
+        		}
+        		resetColor();
+        		std::cout << "\n";
 		}
 
 		// Separador entre hunks
@@ -350,7 +395,8 @@ int Mank::diff(const std::string& filepath) {
 	Log::info("+++ " + filepath + " (current)");
 	std::cout << "\n";
 
-	printDiff(splitLines(committed), splitLines(current));
+	printDiff(splitLines(committed), splitLines(current), 
+              filepath, committed, current);
 
 	Pager::close();
 
@@ -387,6 +433,8 @@ static int diffAll() {
 
 	Pager::open();
 
+	int totalFiles = 0;
+
 	for (const auto& path : changed) {
 		std::string treeHash2 = Objects::getLastTree();
 		auto tree2 = Objects::readTree(treeHash2);
@@ -400,9 +448,18 @@ static int diffAll() {
 		Log::info("--- " + path + " (committed)");
 		Log::info("+++ " + path + " (current)");
 		std::cout << "\n";
-		printDiff(splitLines(committed), splitLines(current));
+	        printDiff(splitLines(committed), splitLines(current), 
+                  path, committed, current);
+		totalFiles++;
 		std::cout << "\n";
 	}
+
+	// Git-like summary
+	if (totalFiles > 0) {
+        	std::cout << "\n" << totalFiles << " modified files.";
+        	std::cout << "\n";
+    	}
+
 
 	Pager::close();
 	return 0;
@@ -903,7 +960,8 @@ int Mank::diffCommits(const std::string& hashA, const std::string& hashB) {
         Log::info("--- " + path + " (" + hashA.substr(0, 8) + ")");
         Log::info("+++ " + path + " (" + hashB.substr(0, 8) + ")");
         std::cout << "\n";
-        printDiff(splitLines(contentOld), splitLines(contentNew));
+        printDiff(splitLines(contentOld), splitLines(contentNew),
+		path, contentOld, contentNew);
         std::cout << "\n";
     }
 

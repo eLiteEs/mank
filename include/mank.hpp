@@ -49,4 +49,8 @@ struct Mank {
 };
 
 std::vector<std::string> splitLines(const std::string& s);
-void printDiff(const std::vector<std::string>& a, const std::vector<std::string>& b);
+void printDiff(const std::vector<std::string>& oldLines,
+               const std::vector<std::string>& newLines,
+               const std::string& filepath = "",
+               const std::string& oldContent = "",
+               const std::string& newContent = "");
