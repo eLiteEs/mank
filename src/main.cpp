@@ -99,22 +99,36 @@ int main(int argc, char** argv) {
 	} else if (command.substr(0, 9) == "--config.") {
 		// Local config
 
-		std::string key = command.substr(9); // "user" o "email"
+		std::string key = command.substr(9); // "name" o "email"
 		if (argc < 3) { Log::error("Usage: mank --config." + key + " <value>"); return 1; }
-		if(key == "email" || key == "user") {
+		if(key == "email" || key == "name") {
 			return Mank::config("user", key, argv[2]);
-		} else if(key == "name") {
+		} else if(key == "reponame") {
 			return Mank::config("core", key, argv[2]);
 		}
 	} else if (command.substr(0, 10) == "--gconfig.") {
 		// Global config
 
-		std::string key = command.substr(10); // "user" o "email"
+		std::string key = command.substr(10); // "name" o "email"
 		if (argc < 3) { Log::error("Usage: mank --gconfig." + key + " <value>"); return 1; }
-		if(key == "email" || key == "user") {
+		if(key == "email" || key == "name") {
 			return Mank::config("user", key, argv[2], true);
 		}
+
+		return 1;
+	} else if(command.substr(0, 10) == "--rconfig.") {
+		// Repo config
+		
+		std::string key = command.substr(10); // "name"
+		if(argc < 3) { Log::error("Usage: mank --rconfig." + key + "<value"); return 1; }
+		if(key == "name") {
+			return Mank::config("core", key, argv[2]);
+		}
+
+		return 1;
 	} else if(command == "man") {
+		// Manuals
+
 		if(argc < 3) {
 			return Man::loadManual("index");
 		}
@@ -184,37 +198,51 @@ int main(int argc, char** argv) {
 		std::cout << "The current branch is " << ansi::BOLD << Objects::getCurrentBranch() << ansi::BOLD << std::endl;
 		return 0;		
 	} else if (command == "unstage" || command == "-u") {
+		// Unstage an added file
 		if (argc < 3) { Log::error("Usage: mank unstage <file|.>"); return 1; }
 		return Mank::unstage(argv[2]);
 	} else if (command == "tag" || command == "-t") {
+		// Get a list of tags and create a new tag
 		if (argc < 3) return Mank::tag();
 		return Mank::tag(argv[2]);
 	} else if (command == "show") {
+		// Show detailed informarion about an specific commit
 		if (argc < 3) { Log::error("Usage: mank show <hash>"); return 1; }
 		return Mank::show(argv[2]);
 	} else if (command == "checkout" || command == "-co") {
+		// Reverse changes and get to that specific commit or tag
 		if (argc < 3) { Log::error("Usage: mank checkout <tag|hash>"); return 1; }
 		return Mank::checkout(argv[2]);
 	} else if (command == "release") {
+		// Create a release from a specific tag
 		if (argc < 3) { Log::error("Usage: mank release <tag>"); return 1; }
 		return Mank::release(argv[2]);
 	} else if (command == "pack") {
+		// Pack the full repository into a .mank-pack file
 		if (argc >= 3 && std::string(argv[2]) == "--full")
 			return Mank::pack(true);
 		return Mank::pack();
 	} else if (command == "unpack") {
+		// Unpack a .mank-pack file
 		if (argc < 3) { Log::error("Usage: mank unpack <file.mank-pack>"); return 1; }
 		return Mank::unpack(argv[2]);
 	} else if (command == "ci") {
+		// Functions for CI
 		std::vector<std::string> args;
 		for (int i = 2; i < argc; i++)
 			args.push_back(argv[i]);
 		return Mank::ci(args);
 	} else if (command == "submodule" || command == "-sm") {
+		// Submodules
 		std::vector<std::string> args;
 		for (int i = 2; i < argc; i++)
 			args.push_back(argv[i]);
 		return Mank::submodule(args);
 	}
+
+	// Invalid command introduced
+	Log::error("Unknown command: \"" + command + "\".");
+	Log::info("Use \"mank help\" to get a list of commands for mank.");
+	return 1;
 }
 
