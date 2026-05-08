@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
 			  << "o" << std::endl;
 		
 		// Show current version and some license information
-		std::cout << ansi::BOLD <<  "mank " << VERSION << "  Copyright (C) 2026 Blas Fernández" << ansi::RESET << std::endl
+		std::cout << ansi::BOLD <<  "mank " << VERSION << "  Copyright (C) " << YEAR << " Blas Fernández" << ansi::RESET << std::endl
 			  << "This program comes with " << ansi::BOLD << "ABSOLUTELY NO WARRANTY" << ansi::RESET << "." << std::endl
 			  << "This is free software, and you are welcome to redistribute it" << std::endl
 			  << "under certain conditions. See LICENSE file for more details." << std::endl

@@ -1,0 +1,29 @@
+Release v0.1.0
+Date: Fri May  8 15:44:12 2026
+Commit: 69817f25f006552782f93f71dab59e1dfcf375c45e45b558e2ab12f2303a8deb
+
+== Contributors ==
+  - 
+  - Blas Fernández
+
+== Commits ==
+  e2051a52 fix: now global config and that stuff works properly
+  5b09dd34 fix: now the name in the global config is written correctly
+  94fec83e fix: now my user isn't on the repo anymore
+  19a92b5d i don't know actually
+  3f968e79 update README.MD
+  6c2ef66c fix: now if you insert an invalid argument, not only not inside mank repository is logged
+  ef21d759 update: better Makefile
+  46123038 fix: now you can write global config directly from cli
+  735caa28 fix: now ci supports more than one command
+
+== Changelog ==
+- e2051a52 fix: now global config and that stuff works properly
+- 5b09dd34 fix: now the name in the global config is written correctly
+- 94fec83e fix: now my user isn't on the repo anymore
+- 19a92b5d i don't know actually
+- 3f968e79 update README.MD
+- 6c2ef66c fix: now if you insert an invalid argument, not only not inside mank repository is logged
+- ef21d759 update: better Makefile
+- 46123038 fix: now you can write global config directly from cli
+- 735caa28 fix: now ci supports more than one command
