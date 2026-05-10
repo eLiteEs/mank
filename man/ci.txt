@@ -1,11 +1,11 @@
 CI
 ===============
-Runs and manages local CI/CD pipelines defined in .mank/ci/pipeline.yml.
+Runs and manages local CI/CD pipelines defined in .mank/ci/.
 Jobs run as independent background processes and write their output
 to log files. A system notification is sent when a job finishes.
 
 Usage:
-    mank ci run                 Run all jobs in the pipeline.
+    mank ci run                 Run all jobs matching the trigger.
     mank ci run <job>           Run a specific job.
     mank ci logs                Show the latest log of every job.
     mank ci logs <job>          Show the latest log of a specific job.
@@ -18,40 +18,160 @@ Examples:
     mank ci logs test
     mank ci logs build --all
 
+PIPELINE STRUCTURE
+------------------
+Pipelines are defined as YAML files in .mank/ci/:
+
+    .mank/ci/
+    ├── pipeline.yml           # Main pipeline (trigger: commit, merge)
+    ├── release.yml            # Release pipeline (trigger: release)
+    ├── test.yml               # Custom pipeline (trigger: manual)
+    └── private/               # Private pipelines (not shared)
+        ├── deploy.yml         # Contains API keys, tokens, etc.
+        └── secrets.yml        # Local-only configuration
+
+Each pipeline file is independent and can have its own triggers,
+environment variables and jobs.
+
 PIPELINE FORMAT
 ---------------
-Create .mank/ci/pipeline.yml to define your pipeline:
+Each pipeline file follows this structure:
 
-    on:
+    pipeline: my-pipeline      # Pipeline name (optional, defaults to filename)
+
+    on:                        # Triggers that activate this pipeline
       - commit
       - merge
       - release
       - manual
 
+    env:                       # Environment variables for all jobs
+      VAR_NAME: value
+      BUILD_TYPE: debug
+
     jobs:
-      build:
-        run: make
-        depends: []
+      job-name:
+        if: condition          # Optional: condition to run this job
+        run: command           # Single command to execute
+        steps:                 # Or multiple steps
+          - run: command1
+          - run: command2
+        depends:               # Jobs that must complete first
+          - other-job
+        env:                   # Job-specific variables
+          TIMEOUT: "30"
+        private: true          # If true, stored in private/ directory
 
-      test:
-        run: ./run_tests.sh
-        depends:
-          - build
-
-      lint:
-        run: clang-tidy src/*.cpp
-        depends:
-          - build
-
-Triggers (on:):
+TRIGGERS (on:)
+--------------
     commit      Runs automatically after "mank commit".
     merge       Runs automatically after "mank merge".
     release     Runs automatically after "mank release".
     manual      Only runs when triggered with "mank ci run".
 
-Dependencies (depends:):
-    Jobs listed under "depends" must be defined in the pipeline.
-    They are resolved and launched in the correct order automatically.
+Multiple triggers can be specified. If no trigger matches, the
+pipeline is skipped unless run manually.
+
+CONDITIONS (if:)
+----------------
+Jobs can have conditions that must be met to execute:
+
+    if: branch == "main"
+    if: platform == "linux"
+    if: tag != ""
+    if: branch == "main" && platform == "linux"
+    if: branch == "develop" || branch == "feature/*"
+
+Available variables for conditions:
+    branch      Current branch name
+    platform    OS name (linux, macos, windows)
+    arch        CPU architecture (x86_64, aarch64)
+    tag         Latest tag name (empty if none)
+    repo        Repository name
+
+PREDEFINED ENVIRONMENT VARIABLES
+--------------------------------
+These variables are automatically available in all jobs:
+
+    $MANK_BRANCH         Current branch name (e.g., "main")
+    $MANK_COMMIT         Full commit hash
+    $MANK_COMMIT_SHORT   Short commit hash (8 chars)
+    $MANK_TAG            Latest tag (empty if none)
+    $MANK_TAG_HASH       Hash of the latest tag
+    $MANK_REPO           Repository name
+    $MANK_PLATFORM       Operating system (linux, macos, windows)
+    $MANK_ARCH           CPU architecture (x86_64, aarch64)
+    $MANK_DATE           Current date (YYYY-MM-DD)
+    $MANK_TIME           Current time (HH:MM:SS)
+    $MANK_DATETIME       Date and time (YYYY-MM-DD HH:MM:SS)
+
+Example usage in a job:
+    deploy:
+      run: |
+        echo "Deploying branch $MANK_BRANCH..."
+        echo "Commit: $MANK_COMMIT_SHORT"
+        curl -X POST https://api.example.com/deploy/$MANK_TAG
+
+PRIVATE PIPELINES
+-----------------
+Files in .mank/ci/private/ are NOT included in the repository when
+sharing or packing. Use them for:
+
+    - API keys and tokens
+    - Local deployment scripts
+    - Machine-specific configuration
+    - Credentials
+
+Jobs can also be marked as private within a public pipeline:
+
+    deploy:
+      run: ./deploy.sh
+      private: true
+
+Private jobs behave the same as public ones but are stored separately.
+
+MULTI-STEP JOBS
+---------------
+Jobs can define multiple steps that run in order. If any step fails,
+the remaining steps are skipped:
+
+    test:
+      steps:
+        - run: make build
+        - run: make test
+        - run: ./integration-tests.sh
+
+DEPENDENCIES
+------------
+Jobs can depend on other jobs. Dependencies are resolved and launched
+in the correct order:
+
+    build:
+      run: make
+
+    test:
+      run: make test
+      depends:
+        - build
+
+    deploy:
+      run: ./deploy.sh
+      depends:
+        - test
+
+ENVIRONMENT VARIABLES
+---------------------
+Variables are resolved in this order (later overrides earlier):
+
+    1. mank predefined variables ($MANK_BRANCH, etc.)
+    2. Pipeline-level env
+    3. Job-level env
+
+Variables can reference other variables:
+
+    env:
+      API_URL: https://api.example.com
+      FULL_URL: $API_URL/v1/deploy
 
 LOGS
 ----
@@ -59,10 +179,65 @@ Logs are stored in .mank/ci/runs/<job>/:
     1.log, 2.log, 3.log ...     One file per run.
     latest.log                  Always points to the most recent run.
 
-Each log includes the job name, run number, date, command and exit code.
+Each log includes:
+    - Pipeline name
+    - Job name
+    - Run number
+    - Date and time
+    - Branch and commit
+    - Condition (if any)
+    - Command output
+    - Exit code
 
 NOTIFICATIONS
 -------------
 When a job finishes, a system notification is sent via notify-send:
     mank ci — build ✓ passed
     mank ci — test ✗ failed
+
+EXAMPLES
+--------
+
+Basic CI pipeline (.mank/ci/pipeline.yml):
+    pipeline: CI
+    on:
+      - commit
+      - merge
+
+    jobs:
+      build:
+        run: make
+
+      test:
+        run: make test
+        depends:
+          - build
+
+Release pipeline (.mank/ci/release.yml):
+    pipeline: Release
+    on:
+      - release
+
+    jobs:
+      package:
+        run: |
+          echo "Packaging release $MANK_TAG..."
+          tar -czf release-$MANK_TAG.tar.gz src/
+
+Private deployment (.mank/ci/private/deploy.yml):
+    pipeline: Deploy
+    on:
+      - manual
+
+    env:
+      SERVER: production.example.com
+      API_KEY: sk-1234567890
+
+    jobs:
+      deploy:
+        if: branch == "main"
+        run: |
+          echo "Deploying to $SERVER..."
+          curl -H "Authorization: Bearer $API_KEY" \
+               -d "tag=$MANK_TAG" \
+               $SERVER/api/deploy

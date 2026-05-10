@@ -64,16 +64,20 @@ mank man release
 Create `.mank/ci/pipeline.yml` to define your pipelines:
 
 ```yaml
+pipeline: CI
 on:
   - commit
   - merge
-  - manual
+
+env:
+  BUILD_TYPE: release
 
 jobs:
   build:
-    run: make
+    run: make $BUILD_TYPE
 
   test:
+    if: branch == "main"
     steps:
       - run: make test
       - run: ./run_tests.sh

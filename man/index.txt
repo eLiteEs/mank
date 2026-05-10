@@ -9,7 +9,7 @@ Browse the manual using the "man" argument:
 Examples:
     mank man add
     mank man commit
-    mank man diff
+    mank man ci
 
 INDEX OF MANUALS
 ----------------
@@ -35,5 +35,6 @@ checkout        Restore the working tree to a commit or tag.
 release         Generate a release from a tag.
 pack            Pack the repository for distribution or backup.
 unpack          Unpack a .mank-pack file.
-ci              Run and manage local CI/CD pipelines.
+ci              Run and manage local CI/CD pipelines with triggers,
+                conditions, environment variables and private jobs.
 submodule       Link and manage mank submodules.
