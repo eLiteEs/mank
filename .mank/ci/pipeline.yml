@@ -1,11 +1,12 @@
+pipeline: Publish
 on:
   - commit
   - manual
 
 jobs:
   publish:
-    steps:
-      - run: git add .
-      - run: git commit -m "sync from mank"
-      - run: git push -u origin main
-    depends: []
+    run: |
+      git add .
+      git commit -m "auto-update from mank"
+      git push
+

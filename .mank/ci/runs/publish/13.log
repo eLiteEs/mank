@@ -5,3 +5,19 @@ Steps: 3
 ---
 
 $ git add .
+
+$ git commit -m "sync from mank"
+[main e96e01f] sync from mank
+ 10 files changed, 235 insertions(+), 30 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/13.log
+ create mode 100644 .mank/objects/29/8af0bd0e54dc24
+ create mode 100644 .mank/objects/53/ead87f73c5285e
+ create mode 100644 .mank/objects/7d/bbf9b3589b6b16
+ create mode 100644 .mank/objects/a0/6b2909268152df
+
+$ git push -u origin main
+To github.com:eLiteEs/mank
+   2ebc27e..e96e01f  main -> main
+rama 'main' configurada para rastrear 'origin/main'.
+
+--- Exit code: 0 ---
