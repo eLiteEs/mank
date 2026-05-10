@@ -144,17 +144,46 @@ int Mank::history(bool oneline) {
         }
 
         if (oneline) {
-            // hash corto + mensaje en una sola línea
-            std::cout << ansi::FG_CYAN << current.substr(0, 8) << ansi::RESET
-                      << " " << message << "\n";
+            std::cout << ansi::FG_CYAN << current.substr(0, 8) 
+                      << ansi::RESET << " " << message << "\n";
         } else {
-            std::cout << ansi::FG_CYAN << "commit: "  << ansi::RESET << current.substr(0,16) << "\n";
+            // ── FORMATO MEJORADO ─────────────────
+            std::cout << ansi::FG_YELLOW << "commit " << current.substr(0, 16) 
+                      << ansi::RESET << "\n";
+            
+            // NUEVO: Mostrar ramas y tags
+            auto tags = Objects::listTags();
+            for (const auto& [name, tagHash] : tags) {
+                if (tagHash == current) {
+                    std::cout << ansi::FG_CYAN << "Tag: " << name 
+                              << ansi::RESET << "\n";
+                }
+            }
+            
+            std::cout << ansi::BOLD << "Author: " << ansi::RESET 
+                      << user << " <" << email << ">\n";
+            
             time_t t = std::stol(date);
-            std::cout << ansi::FG_CYAN << "date: "    << ansi::RESET << std::ctime(&t);
-            std::cout << ansi::FG_CYAN << "by: "      << ansi::RESET << user << "\n";
-            std::cout << ansi::FG_CYAN << "email: "   << ansi::RESET << email << "\n";
-            std::cout << ansi::FG_CYAN << "message: " << ansi::RESET << message << "\n\n";
-            std::cout << ansi::BOLD << "---------------------------" << ansi::RESET << "\n";
+            std::cout << ansi::BOLD << "Date:   " << ansi::RESET 
+                      << std::ctime(&t);  // ya incluye \n
+            
+            // NUEVO: Mostrar primer línea del mensaje en negrita
+            std::string firstLine = message.substr(0, message.find('\n'));
+            std::cout << "\n    " << ansi::BOLD << firstLine 
+                      << ansi::RESET << "\n";
+            
+            // Si hay más líneas, mostrarlas
+            if (message.find('\n') != std::string::npos) {
+                std::string rest = message.substr(message.find('\n') + 1);
+                if (!rest.empty() && rest != "\n") {
+                    std::cout << "    " << rest;
+                }
+            }
+            
+            std::cout << "\n";
+            std::cout << ansi::DIM 
+                      << "──────────────────────────────────────────" 
+                      << ansi::RESET << "\n\n";
         }
 
         current = parent;
