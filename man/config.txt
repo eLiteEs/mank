@@ -6,8 +6,8 @@ locally (per repository) or globally (for all repositories).
 Usage:
     mank --config.name <value>
     mank --config.email <value>
-    mank --config.gname <value>
-    mank --config.gemail <value>
+    mank --gconfig.name <value>
+    mank --gconfig.email <value>
 
 Examples:
     mank --config.name "Blas Fernández"
@@ -41,4 +41,4 @@ Config file format:
 Notes:
     - The repository name under [core] is set automatically by
       "mank init" using the folder name. You can change it with:
-          mank --rconfig.name "new-name"
+          mank --config.reponame "new-name"

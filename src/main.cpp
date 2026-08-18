@@ -33,9 +33,14 @@
 // I thought it was going to be harder xd
 // 2-05-2026
 
+// oh shet
+// there we go again
+// 18-08-2025
+
 // Import libs
 #include <iostream>
 #include <string>
+
 #include "log.hpp"
 #include "mank.hpp"
 #include "version.hpp"
@@ -55,8 +60,10 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
-	std::string command = argv[1]; // First argument given to the command
+	std::string command = argv[1]; // First argument given to the program
 
+	// On this masive if/else if chain, the command is going to be checked in order to run each function
+	// TODO: Replace this war crime with something more human
 	if(command == "help") {
 		Pager::open();
 
@@ -68,7 +75,6 @@ int main(int argc, char** argv) {
 		std::cout << help;
 
 		Pager::close();
-			
 		return 0;
 	} else if(command == "init" || command == "-i") {
 		// Check if a directory was introduced
@@ -89,7 +95,7 @@ int main(int argc, char** argv) {
 			  << "o" << std::endl;
 		
 		// Show current version and some license information
-		std::cout << ansi::BOLD <<  "mank " << VERSION << "  Copyright (C) " << YEAR << " Blas Fernández" << ansi::RESET << std::endl
+		std::cout << ansi::BOLD <<  "mank " << ansi::BLINK << VERSION << ansi::RESET << ansi::BOLD << "  Copyright (C) " << YEAR << " Blas Fernández" << ansi::RESET << std::endl
 			  << "This program comes with " << ansi::BOLD << "ABSOLUTELY NO WARRANTY" << ansi::RESET << "." << std::endl
 			  << "This is free software, and you are welcome to redistribute it" << std::endl
 			  << "under certain conditions. See LICENSE file for more details." << std::endl
@@ -98,49 +104,55 @@ int main(int argc, char** argv) {
 		return 0;
 	} else if (command.substr(0, 9) == "--config.") {
 		// Local config
-
 		std::string key = command.substr(9); // "name" o "email"
+		
+		// Check if the user introduced the minimun amount of arguments to run this command
 		if (argc < 3) { Log::error("Usage: mank --config." + key + " <value>"); return 1; }
+		
 		if(key == "email" || key == "name") {
 			return Mank::config("user", key, argv[2]);
 		} else if(key == "reponame") {
-			return Mank::config("core", key, argv[2]);
-		}
-	} else if (command.substr(0, 10) == "--gconfig.") {
-		// Global config
-
-		std::string key = command.substr(10); // "name" o "email"
-		if (argc < 3) { Log::error("Usage: mank --gconfig." + key + " <value>"); return 1; }
-		if(key == "email" || key == "name") {
-			return Mank::config("user", key, argv[2], true);
+			return Mank::config("core", "name", argv[2]);
+		} else {
+			std::cout << ansi::FG_RED << "Unknown key: " << key << ". Are you sure you wanted to type that?" << ansi::RESET << std::endl;
 		}
 
 		return 1;
-	} else if(command.substr(0, 10) == "--rconfig.") {
-		// Repo config
+	} else if (command.substr(0, 10) == "--gconfig.") {
+		// Global config
+		std::string key = command.substr(10); // "name" o "email"
 		
-		std::string key = command.substr(10); // "name"
-		if(argc < 3) { Log::error("Usage: mank --rconfig." + key + "<value"); return 1; }
-		if(key == "name") {
-			return Mank::config("core", key, argv[2]);
+		// Check if the user introduced the minimun amount of arguments to run this command
+		if (argc < 3) { Log::error("Usage: mank --gconfig." + key + " <value>"); return 1; }
+
+		if(key == "email" || key == "name") {
+			return Mank::config("user", key, argv[2], true);
+		} else {
+			std::cout << ansi::FG_RED << "Unknown key: " << key << ". Are you sure you wanted to type that?" << ansi::RESET << std::endl;
 		}
 
 		return 1;
 	} else if(command == "man") {
 		// Manuals
-
 		if(argc < 3) {
 			return Man::loadManual("index");
 		}
 
 		std::string manual = argv[2];
 		return Man::loadManual(manual);
-	} else if (!Objects::isRepo()) { // <-------------------------------------- Repository commands
-		Log::error("Not inside a mank repository or invalid argument introduced.");
-		Log::info("Use \"mank help\" to get some help.");
+	}
 
+	// Ahead of this point the user must be on a repository
+	// So we'll check if it's on a repository
+	// TODO: fix this without using celotape
+	else if (!Objects::isRepo()) {
+		Log::error("Not inside a mank repository.");
+		Log::info("Use \"mank help\" to get some help.");
 		return 1;
-	} else if(command == "add" || command == "-a") {
+	}
+
+	// This are commands that for being runned require to be inside a mank repository
+	else if(command == "add" || command == "-a") {
 		// This command is for adding files to the current commit
 
 		// Check if a file was introduced to add
