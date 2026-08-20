@@ -6,7 +6,7 @@ All tracked files are replaced with their versions from that commit.
 Usage:
     mank checkout <tag>
     mank checkout <hash>
-    mank -co <tag|hash>
+    mank co <tag|hash>
 
 Examples:
     mank checkout v1.0.0        Restore to the commit tagged as "v1.0.0".

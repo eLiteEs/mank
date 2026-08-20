@@ -5,7 +5,7 @@ target branch that are not in the current branch are applied.
 
 Usage:
     mank merge <branch>
-    mank -mg <branch>
+    mank mg <branch>
 
 Examples:
     mank merge feature-login    Merge "feature-login" into the current branch.

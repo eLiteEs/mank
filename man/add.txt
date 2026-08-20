@@ -7,7 +7,7 @@ Usage:
     mank add <file>
     mank add <directory>
     mank add .
-    mank -a <file|directory|.>
+    mank a <file|directory|.>
 
 Examples:
     mank add main.cpp           Stage a single file.

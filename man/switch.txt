@@ -4,7 +4,7 @@ Switches the working tree to another branch.
 
 Usage:
     mank switch <branch>
-    mank -sw <branch>
+    mank sw <branch>
 
 Examples:
     mank switch main

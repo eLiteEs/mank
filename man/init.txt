@@ -7,8 +7,8 @@ structure and a default config file.
 Usage:
     mank init
     mank init <directory>
-    mank -i
-    mank -i <directory>
+    mank i
+    mank i <directory>
 
 Examples:
     mank init               Initialize in the current directory.
@@ -19,4 +19,4 @@ Notes:
       will warn you and exit without making any changes.
     - The repository name is automatically set to the folder name.
       You can change it later with:
-          mank --config.name "my-project"
+          mank config repo.name "my-project"

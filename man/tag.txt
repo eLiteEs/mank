@@ -6,8 +6,8 @@ existing tags.
 Usage:
     mank tag
     mank tag <name>
-    mank -t
-    mank -t <name>
+    mank t
+    mank t <name>
 
 Examples:
     mank tag                List all tags with their commit hashes.

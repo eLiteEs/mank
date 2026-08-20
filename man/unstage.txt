@@ -6,7 +6,7 @@ disk. The opposite of "mank add".
 Usage:
     mank unstage <file>
     mank unstage .
-    mank -u <file|.>
+    mank u <file|.>
 
 Examples:
     mank unstage main.cpp       Remove main.cpp from the index.

@@ -10,7 +10,7 @@ Usage:
     mank submodule update
     mank submodule list
     mank submodule remove <target-path>
-    mank -sm <subcommand>
+    mank sm <subcommand>
 
 Subcommands:
     add <repo> <path>   Link an existing mank repo at the given path.

@@ -42,13 +42,7 @@
 #include <string>
 
 #include "log.hpp"
-#include "mank.hpp"
-#include "version.hpp"
-#include "help.hpp"
-#include "objects.hpp"
-#include "decorations.hpp"
-#include "pager.hpp"
-#include "man.hpp"
+#include "cli.hpp"
 
 // Main entry point
 int main(int argc, char** argv) {
@@ -61,200 +55,16 @@ int main(int argc, char** argv) {
 	}
 
 	std::string command = argv[1]; // First argument given to the program
+	std::vector<std::string> rest(argv + 2, argv + argc); // Get the rest of the arguments
 
-	// On this masive if/else if chain, the command is going to be checked in order to run each function
-	// TODO: Replace this war crime with something more human
-	if(command == "help") {
-		Pager::open();
-
-		// Show some help to the user
-		std::cout << ansi::BOLD << "mank " << VERSION << ansi::RESET<< std::endl
-			  << "------------------" << std::endl
-			  << "Commands:" << std::endl;
-
-		std::cout << help;
-
-		Pager::close();
-		return 0;
-	} else if(command == "init" || command == "-i") {
-		// Check if a directory was introduced
-		if(argc < 3) {
-			// No directory was introduced
-			return Mank::init();
-		}
-
-		// A directory was introduced
-		std::string dir = argv[2]; // Get the directory introduced
-		return Mank::init(dir);
-	} else if(command == "version" || command == "-v") {
-		// Show the logo of mank
-		std::cout << "o o o  mank" << std::endl
-			  << "|/ /   " << ansi::FG_CYAN << VERSION << ansi::RESET << std::endl
-  			  << "o o" << std::endl
-			  << "|/" << std::endl
-			  << "o" << std::endl;
-		
-		// Show current version and some license information
-		std::cout << ansi::BOLD <<  "mank " << ansi::BLINK << VERSION << ansi::RESET << ansi::BOLD << "  Copyright (C) " << YEAR << " Blas Fernández" << ansi::RESET << std::endl
-			  << "This program comes with " << ansi::BOLD << "ABSOLUTELY NO WARRANTY" << ansi::RESET << "." << std::endl
-			  << "This is free software, and you are welcome to redistribute it" << std::endl
-			  << "under certain conditions. See LICENSE file for more details." << std::endl
-			  << "License: " << ansi::UNDERLINE << "GNU GPL v3" << ansi::RESET << std::endl;
-
-		return 0;
-	} else if (command.substr(0, 9) == "--config.") {
-		// Local config
-		std::string key = command.substr(9); // "name" o "email"
-		
-		// Check if the user introduced the minimun amount of arguments to run this command
-		if (argc < 3) { Log::error("Usage: mank --config." + key + " <value>"); return 1; }
-		
-		if(key == "email" || key == "name") {
-			return Mank::config("user", key, argv[2]);
-		} else if(key == "reponame") {
-			return Mank::config("core", "name", argv[2]);
-		} else {
-			std::cout << ansi::FG_RED << "Unknown key: " << key << ". Are you sure you wanted to type that?" << ansi::RESET << std::endl;
-		}
-
-		return 1;
-	} else if (command.substr(0, 10) == "--gconfig.") {
-		// Global config
-		std::string key = command.substr(10); // "name" o "email"
-		
-		// Check if the user introduced the minimun amount of arguments to run this command
-		if (argc < 3) { Log::error("Usage: mank --gconfig." + key + " <value>"); return 1; }
-
-		if(key == "email" || key == "name") {
-			return Mank::config("user", key, argv[2], true);
-		} else {
-			std::cout << ansi::FG_RED << "Unknown key: " << key << ". Are you sure you wanted to type that?" << ansi::RESET << std::endl;
-		}
-
-		return 1;
-	} else if(command == "man") {
-		// Manuals
-		if(argc < 3) {
-			return Man::loadManual("index");
-		}
-
-		std::string manual = argv[2];
-		return Man::loadManual(manual);
-	}
-
-	// Ahead of this point the user must be on a repository
-	// So we'll check if it's on a repository
-	// TODO: fix this without using celotape
-	else if (!Objects::isRepo()) {
-		Log::error("Not inside a mank repository.");
-		Log::info("Use \"mank help\" to get some help.");
+	auto it = commands.find(command); // Search for the command
+	if(it == commands.end()) { // The search reached the end
+		// Invalid command introduced
+		Log::error("Unknown command: \"" + command + "\".");
+		Log::info("Use \"mank help\" to get a list of commands for mank.");
 		return 1;
 	}
 
-	// This are commands that for being runned require to be inside a mank repository
-	else if(command == "add" || command == "-a") {
-		// This command is for adding files to the current commit
-
-		// Check if a file was introduced to add
-		if(argc < 3) {
-			// Warn the user about this problem
-			Log::error("Usage: mank add <file>");
-			return 1;
-		}
-
-		// Add the file and return the result of the operation
-		return Mank::add(argv[2]);
-	} else if (command == "commit" || command == "-c") {
-		// Commit all the staged files
-		if (argc < 3) { Log::error("Usage: mank -c \"message\""); return 1; }
-		return Mank::commit(argv[2]);
-	} else if (command == "log" || command == "-l") {
-		if (argc >= 3 && std::string(argv[2]) == "--oneline")
-			return Mank::history(true);
-		return Mank::history();
-	} else if (command == "status" || command == "-s") {
-		// Show which files were changed being staged
-		return Mank::status();
-	} else if (command == "diff" || command == "-d") {
-		if (argc < 3) { Log::error("Usage: mank diff <file|.>"); return 1; }
-		if (std::string(argv[2]) == "--commits") {
-			if (argc < 5) { Log::error("Usage: mank diff --commits <hash1> <hash2>"); return 1; }
-			return Mank::diffCommits(argv[3], argv[4]);
-		}
-		return Mank::diff(argv[2]);
-	} else if (command == "branch" || command == "-b") {
-		// Create a new branch
-		if (argc < 3) return Mank::branch();
-		// Create a new branch using the name that the user gave
-		return Mank::branch(argv[2]);
-	} else if (command == "switch" || command == "-sw") {
-		// Switch to another branch
-		if (argc < 3) { Log::error("Usage: mank -sw <branch>"); return 1; }
-		return Mank::switchBranch(argv[2]);
-	}  else if (command == "restore" || command == "-r") {
-		// Delete unstaged changes made to a file
-		if (argc < 3) { Log::error("Usage: mank -r <file>"); return 1; }
-		return Mank::restore(argv[2]);
-	} else if (command == "stash" || command == "-st") {
-		// Save file changes for using them later
-		if (argc >= 3 && std::string(argv[2]) == "pop")
-			// Using pop, get the changes again
-			return Mank::stashPop();
-		return Mank::stash();
-	} else if (command == "merge" || command == "-mg") {
-		// Merge another branch with the current branch
-		if (argc < 3) { Log::error("Usage: mank -mg <branch>"); return 1; }
-		return Mank::merge(argv[2]);
-	} else if(command == "dbranch" || command == "-db") {
-		// Display in which branch we're
-		std::cout << "The current branch is " << ansi::BOLD << Objects::getCurrentBranch() << ansi::BOLD << std::endl;
-		return 0;		
-	} else if (command == "unstage" || command == "-u") {
-		// Unstage an added file
-		if (argc < 3) { Log::error("Usage: mank unstage <file|.>"); return 1; }
-		return Mank::unstage(argv[2]);
-	} else if (command == "tag" || command == "-t") {
-		// Get a list of tags and create a new tag
-		if (argc < 3) return Mank::tag();
-		return Mank::tag(argv[2]);
-	} else if (command == "show") {
-		// Show detailed informarion about an specific commit
-		if (argc < 3) { Log::error("Usage: mank show <hash>"); return 1; }
-		return Mank::show(argv[2]);
-	} else if (command == "checkout" || command == "-co") {
-		// Reverse changes and get to that specific commit or tag
-		if (argc < 3) { Log::error("Usage: mank checkout <tag|hash>"); return 1; }
-		return Mank::checkout(argv[2]);
-	} else if (command == "release") {
-		// Create a release from a specific tag
-		if (argc < 3) { Log::error("Usage: mank release <tag>"); return 1; }
-		return Mank::release(argv[2]);
-	} else if (command == "pack") {
-		// Pack the full repository into a .mank-pack file
-		if (argc >= 3 && std::string(argv[2]) == "--full")
-			return Mank::pack(true);
-		return Mank::pack();
-	} else if (command == "unpack") {
-		// Unpack a .mank-pack file
-		if (argc < 3) { Log::error("Usage: mank unpack <file.mank-pack>"); return 1; }
-		return Mank::unpack(argv[2]);
-	} else if (command == "ci") {
-		// Functions for CI
-		std::vector<std::string> args;
-		for (int i = 2; i < argc; i++)
-			args.push_back(argv[i]);
-		return Mank::ci(args);
-	} else if (command == "submodule" || command == "-sm") {
-		// Submodules
-		std::vector<std::string> args;
-		for (int i = 2; i < argc; i++)
-			args.push_back(argv[i]);
-		return Mank::submodule(args);
-	}
-
-	// Invalid command introduced
-	Log::error("Unknown command: \"" + command + "\".");
-	Log::info("Use \"mank help\" to get a list of commands for mank.");
-	return 1;
+	return it->second(rest); // Run the command and return its result
 }
 

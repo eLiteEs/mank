@@ -6,8 +6,8 @@ on something else, then reapplies them later.
 Usage:
     mank stash              Save current changes to the stash.
     mank stash pop          Reapply stashed changes.
-    mank -st
-    mank -st pop
+    mank st
+    mank st pop
 
 Workflow example:
     mank stash              You are mid-way through a change but need

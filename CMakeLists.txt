@@ -27,4 +27,4 @@ target_include_directories(mank PRIVATE
 )
 
 
-target_compile_options(mank PRIVATE -Wall -Wextra)
+target_compile_options(mank PRIVATE -Wall -Wextra -g)

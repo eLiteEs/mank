@@ -5,7 +5,7 @@ committed version. This operation cannot be undone.
 
 Usage:
     mank restore <file>
-    mank -r <file>
+    mank r <file>
 
 Examples:
     mank restore main.cpp       Restore main.cpp to its last committed state.

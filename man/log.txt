@@ -6,8 +6,8 @@ recent commit to the oldest.
 Usage:
     mank log
     mank log --oneline
-    mank -l
-    mank -l --oneline
+    mank l
+    mank l --oneline
 
 Modes:
     (default)       Shows full details for each commit: hash, date,

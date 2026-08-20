@@ -552,7 +552,11 @@ int Mank::switchBranch(const std::string& name) {
 		auto tree = Objects::readTree(treeHash);
 		for (const auto& [path, hash] : tree) {
 			std::string fileContent = Objects::read(hash);
-			fs::create_directories(fs::path(path).parent_path());
+
+			if(!fs::path(path).parent_path().empty()) {
+				fs::create_directories(fs::path(path).parent_path());
+			}
+
 			std::ofstream out(path);
 			out << fileContent;
 		}

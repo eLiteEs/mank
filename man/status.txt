@@ -6,7 +6,7 @@ ready to commit.
 
 Usage:
     mank status
-    mank -s
+    mank s
 
 Output:
     - Files listed as modified have changes on disk that differ from

@@ -6,8 +6,8 @@ branches if no name is given.
 Usage:
     mank branch
     mank branch <name>
-    mank -b
-    mank -b <name>
+    mank b
+    mank b <name>
 
 Examples:
     mank branch                 List all branches.
@@ -17,4 +17,3 @@ Notes:
     - Creating a branch does not switch to it automatically.
       Use "mank switch <name>" after creating it.
     - The default branch is "main".
-    - To see which branch you are currently on, use "mank dbranch".

@@ -26,7 +26,6 @@ switch          Switch to another branch.
 restore         Discard unstaged changes in a file.
 stash           Save and restore uncommitted changes.
 merge           Merge a branch into the current one.
-dbranch         Display the current branch.
 config          Set user and repository configuration.
 unstage         Remove files from the index without touching disk.
 tag             Create or list tags.

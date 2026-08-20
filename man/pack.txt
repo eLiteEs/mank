@@ -24,4 +24,4 @@ Notes:
     - To restore a pack on another machine, use "mank unpack".
     - The repository name is read from [core] name in .mank/config.
       Change it with:
-          mank --config.name "my-project"
+          mank config repo.name "my-project"
