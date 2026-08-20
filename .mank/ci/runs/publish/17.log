@@ -10,3 +10,49 @@ $ git add .
 git commit -m "auto-update from mank"
 git push
 
+[main 689eaf0] auto-update from mank
+ 64 files changed, 840 insertions(+), 505 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/17.log
+ create mode 100644 .mank/objects/05/3de4c38410fe80
+ create mode 100644 .mank/objects/09/a210d60b8c0c47
+ create mode 100644 .mank/objects/14/1794fcb93e7a0c
+ create mode 100644 .mank/objects/22/d2436868767979
+ create mode 100644 .mank/objects/23/01cc88278341ab
+ create mode 100644 .mank/objects/30/a47675ec547eb9
+ create mode 100644 .mank/objects/44/c5ba3bb3bac182
+ create mode 100644 .mank/objects/46/18f8cc06e7d304
+ create mode 100644 .mank/objects/63/7001414e22766f
+ create mode 100644 .mank/objects/70/7a5c8df5c7173f
+ create mode 100644 .mank/objects/81/0359f245d2c579
+ create mode 100644 .mank/objects/89/1f2769a10bc2c2
+ create mode 100644 .mank/objects/8a/2ec6a784683de1
+ create mode 100644 .mank/objects/8e/d05665869d4a05
+ create mode 100644 .mank/objects/8f/3cbc5bc05fd8ba
+ create mode 100644 .mank/objects/94/8f359effa2282c
+ create mode 100644 .mank/objects/96/d0ba129818aa33
+ create mode 100644 .mank/objects/9b/52219ae95983dd
+ create mode 100644 .mank/objects/a5/0584f0e922489d
+ create mode 100644 .mank/objects/a7/874e09b28b155e
+ create mode 100644 .mank/objects/ae/54213f5296117a
+ create mode 100644 .mank/objects/b0/1974c44ad4a45e
+ create mode 100644 .mank/objects/c4/3b8a6cb2654e4c
+ create mode 100644 .mank/objects/c6/a3051ae88d25ca
+ create mode 100644 .mank/objects/d1/b0f7835dc1db3f
+ create mode 100644 .mank/objects/de/d8a1a39887d619
+ create mode 100644 .mank/objects/df/8730ba83976fc0
+ create mode 100644 .mank/objects/e9/677b54571655c2
+ create mode 100644 .mank/objects/eb/e83696bdf38bc8
+ create mode 100644 .mank/objects/fa/516cb077f92cb7
+ create mode 100644 .mank/objects/fb/0240eaa4bdd8df
+ create mode 100644 .mank/objects/fb/22911449f0b14a
+ create mode 100644 .mank/objects/fe/4b902ca5bb4f07
+ create mode 100644 include/cli.hpp
+ delete mode 100644 man/dbranch.txt
+ create mode 100644 src/cli.cpp
+ssh: Could not resolve hostname codeberg.org: Temporary failure in name resolution
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+--- Exit code: 128 ---
