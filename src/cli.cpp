@@ -158,14 +158,51 @@ int commit(const std::vector<std::string>& args) {
 		return 1;
 	}
 
+	std::string msg;
+
 	// Check if the user included a commit message
 	if(args.empty()) {
-		std::cout << ansi::FG_RED << "You must include a commit message." << ansi::RESET << std::endl
-			<< "Usage: mank commit <message>" << std::endl;
+		// If he didn't, ask him to add one
+		std::cout << "Include a message for the commit: " << ansi::BOLD;
+		std::getline(std::cin, msg);
+		
+		// Check if the user wants to add a description
+		std::cout << ansi::RESET << "Do you want to add a description? (yes or no): " << ansi::BOLD;
+		std::string confirmation;
+		std::getline(std::cin, confirmation);
+
+		if(confirmation == "yes") {
+			std::cout << "Write the description here. Create a line with just \"EOF\" to complete it." << ansi::RESET << std::endl;
+
+			std::string line, description;
+			while(true) {
+				std::getline(std::cin, line);
+			
+				if(line == "EOF") {
+					break;
+				}
+
+				description += line + "\n";
+			}
+
+			msg += "&newline&" + description;
+		}
+	} else {
+		// If it did, get it
+		msg = args[0];
+
+		if(args.size() >= 2) { // The user added a description via CLI
+			msg += "&newline&" + args[1];
+		}
+	}
+
+	// Check if the message is empty
+	if(msg.empty()) {
+		std::cout << ansi::FG_RED << "The commit message shouldn't be empty." << ansi::RESET << std::endl;
 		return 1;
 	}
 
-	return Mank::commit(args[0]);
+	return Mank::commit(msg);
 }
 
 // History of commits

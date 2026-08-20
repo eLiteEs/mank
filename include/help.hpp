@@ -40,7 +40,7 @@ std::string(ansi::BOLD) + "mank release <tag>" + std::string(ansi::RESET) + " >>
 std::string(ansi::BOLD) + "\n- Manage changes -----------------------\n" + std::string(ansi::RESET) +
 std::string(ansi::BOLD) + "mank add | a <file>" + std::string(ansi::RESET) + " >> Stage a file. Use \".\" for adding all the files and folders recursively.\n" +
 std::string(ansi::BOLD) + "mank unstage | u <file>" + std::string(ansi::RESET) + " >> Unstage a file.\n" +
-std::string(ansi::BOLD) + "mank commit | c <message>" + std::string(ansi::RESET) + " >> Make a commit.\n" +
+std::string(ansi::BOLD) + "mank commit | c <message> [description]" + std::string(ansi::RESET) + " >> Make a commit.\n" +
 std::string(ansi::BOLD) + "mank diff | d <file>" + std::string(ansi::RESET) + " >> Show the diff of an specific file. Use \".\" for watching the diff of all the files of the repository.\n" +
 std::string(ansi::BOLD) + "              --commits <hash1> <hash2>" + std::string(ansi::RESET) + " >> Compare two commits.\n" +
 std::string(ansi::BOLD) + "mank restore | r <file>" + std::string(ansi::RESET) + " >> Discard unstaged changes from a file.\n" +

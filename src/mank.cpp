@@ -39,33 +39,33 @@ namespace fs = std::filesystem;
 
 // This function initializes a repo in a folder
 int Mank::init(std::string dir) {
-    fs::path root = fs::path(dir) / ".mank";
+	fs::path root = fs::path(dir) / ".mank";
 
-    if(fs::exists(root)) {
-        Log::error("There's already an initialized repository in " + fs::absolute(root).string());
-        Log::info("If you haven't initialized a repository in that folder, maybe you should delete the \".mank\" folder inside it.");
-        return 1;
-    }
+	if(fs::exists(root)) {
+		Log::error("There's already an initialized repository in " + fs::absolute(root).string());
+		Log::info("If you haven't initialized a repository in that folder, maybe you should delete the \".mank\" folder inside it.");
+		return 1;
+	}
 
-    fs::create_directories(root / "objects" / "info");
-    fs::create_directories(root / "objects" / "pack");
-    fs::create_directories(root / "refs" / "heads");
-    fs::create_directories(root / "refs" / "tags");
+	fs::create_directories(root / "objects" / "info");
+	fs::create_directories(root / "objects" / "pack");
+	fs::create_directories(root / "refs" / "heads");
+	fs::create_directories(root / "refs" / "tags");
 
-    std::ofstream(root / "HEAD") << "ref: refs/heads/main\n";
+	std::ofstream(root / "HEAD") << "ref: refs/heads/main\n";
 
-    // Obtener el nombre del repo a partir de la carpeta
-    std::string repoName = fs::absolute(fs::path(dir)).filename().string();
+	// TODO: Remove the . at the final of the path
+	std::string repoName = fs::absolute(fs::path(dir)).filename().string();
 
-    std::ofstream config(root / "config");
-    config << "[core]\n"
-           << "\trepositoryformatversion = 0\n"
-           << "\tfilemode = true\n"
-           << "\tbare = false\n"
-           << "\tname = " << repoName << "\n";  // <-- añadir esto
+	std::ofstream config(root / "config");
+	config << "[core]\n"
+		   << "\trepositoryformatversion = 0\n"
+		   << "\tfilemode = true\n"
+		   << "\tbare = false\n"
+		   << "\tname = " << repoName << "\n"; 
 
-    Log::log("Empty repository created in " + fs::absolute(root).string());
-    return 0;
+	Log::log("Empty repository created in " + fs::absolute(root).string());
+	return 0;
 }
 
 int Mank::commit(const std::string& message) {
@@ -112,85 +112,82 @@ int Mank::commit(const std::string& message) {
 }
 
 int Mank::history(bool oneline) {
-    std::ifstream refFile(Objects::getCurrentRef());
-    if (!refFile.is_open()) {
-        Log::error("No commits yet.");
-        return 1;
-    }
+	std::ifstream refFile(Objects::getCurrentRef());
+	if (!refFile.is_open()) {
+		Log::error("No commits yet.");
+		return 1;
+	}
 
-    std::string current;
-    std::getline(refFile, current);
+	std::string current;
+	std::getline(refFile, current);
 
-    Pager::open();
+	Pager::open();
 
-    while (!current.empty()) {
-        std::string content = Objects::read(current);
-        if (content.empty()) break;
+	while (!current.empty()) {
+		std::string content = Objects::read(current);
+		if (content.empty()) break;
 
-        std::string tree, parent, date, message, user, email;
-        std::istringstream ss(content);
-        std::string line;
+		std::string tree, parent, date, message, user, email, msg;
+		std::istringstream ss(content);
+		std::string line;
 
-        while (std::getline(ss, line)) {
-            if (line.substr(0, 5) == "tree ")        tree = line.substr(5);
-            else if (line.substr(0, 7) == "parent ") parent = line.substr(7);
-            else if (line.substr(0, 5) == "date ")   date = line.substr(5);
-            else if (line.substr(0, 3) == "by ")     user = line.substr(3);
-            else if (line.substr(0, 6) == "email ")  email = line.substr(6);
-            else if (line.empty()) {
-                std::getline(ss, message);
-                break;
-            }
-        }
+		while (std::getline(ss, line)) {
+			if (line.substr(0, 5) == "tree ") 	 tree = line.substr(5);
+			else if (line.substr(0, 7) == "parent ") parent = line.substr(7);
+			else if (line.substr(0, 5) == "date ")   date = line.substr(5);
+			else if (line.substr(0, 3) == "by ")	 user = line.substr(3);
+			else if (line.substr(0, 6) == "email ")  email = line.substr(6);
+			else if (line.empty()) {
+				std::getline(ss, message);
+				break;
+			} 
+		}
 
-        if (oneline) {
-            std::cout << ansi::FG_CYAN << current.substr(0, 8) 
-                      << ansi::RESET << " " << message << "\n";
-        } else {
-            // ── FORMATO MEJORADO ─────────────────
-            std::cout << ansi::FG_YELLOW << "commit " << current.substr(0, 16) 
-                      << ansi::RESET << "\n";
-            
-            // NUEVO: Mostrar ramas y tags
-            auto tags = Objects::listTags();
-            for (const auto& [name, tagHash] : tags) {
-                if (tagHash == current) {
-                    std::cout << ansi::FG_CYAN << "Tag: " << name 
-                              << ansi::RESET << "\n";
-                }
-            }
-            
-            std::cout << ansi::BOLD << "Author: " << ansi::RESET 
-                      << user << " <" << email << ">\n";
-            
-            time_t t = std::stol(date);
-            std::cout << ansi::BOLD << "Date:   " << ansi::RESET 
-                      << std::ctime(&t);  // ya incluye \n
-            
-            // NUEVO: Mostrar primer línea del mensaje en negrita
-            std::string firstLine = message.substr(0, message.find('\n'));
-            std::cout << "\n    " << ansi::BOLD << firstLine 
-                      << ansi::RESET << "\n";
-            
-            // Si hay más líneas, mostrarlas
-            if (message.find('\n') != std::string::npos) {
-                std::string rest = message.substr(message.find('\n') + 1);
-                if (!rest.empty() && rest != "\n") {
-                    std::cout << "    " << rest;
-                }
-            }
-            
-            std::cout << "\n";
-            std::cout << ansi::DIM 
-                      << "──────────────────────────────────────────" 
-                      << ansi::RESET << "\n\n";
-        }
+		// Parse the message to divide title and description
+		std::string title, description;
+		if(message.find("&newline&") != std::string::npos) {
+			title = message.substr(0,message.find("&newline&"));
+			description = message.substr(message.find("&newline&") + 9);
+		} else {
+			title = message;
+		}
 
-        current = parent;
-    }
+		if (oneline) {
+			std::cout << ansi::FG_CYAN << current.substr(0, 8) 
+				  << ansi::RESET << " " << title << "\n";
+		} else {
+			std::cout << ansi::FG_YELLOW << "commit " << ansi::BOLD << current.substr(0, 16) 
+				  << ansi::RESET << "\n";
+			
+			auto tags = Objects::listTags();
+			for (const auto& [name, tagHash] : tags) {
+				if (tagHash == current) {
+					std::cout << ansi::FG_CYAN << "Tag: " << name 
+						  << ansi::RESET << "\n";
+				}
+			}
+			
+			std::cout << ansi::BOLD << "Author: " << ansi::RESET 
+				  << user << " <" << email << ">\n";
+			
+			time_t t = std::stol(date);
+			std::cout << ansi::BOLD << "Date:   " << ansi::RESET 
+				  << std::ctime(&t);
 
-    Pager::close();
-    return 0;
+			std::cout << (!description.empty() ? ansi::BOLD : "") << title << std::endl
+				  << description << (!description.empty() ? "\n" : "");
+		   
+			std::string bar(45, (char) 32);
+			std::cout << ansi::UNDERLINE 
+				  << bar 
+				  << ansi::RESET << "\n\n";
+		}
+
+		current = parent;
+	}
+
+	Pager::close();
+	return 0;
 }
 
 int Mank::status() {
@@ -257,10 +254,10 @@ std::vector<std::string> splitLines(const std::string& content) {
 }
 
 void printDiff(const std::vector<std::string>& oldLines,
-               const std::vector<std::string>& newLines,
-               const std::string& filepath,
-               const std::string& oldContent, 
-               const std::string& newContent) {
+			   const std::vector<std::string>& newLines,
+			   const std::string& filepath,
+			   const std::string& oldContent, 
+			   const std::string& newContent) {
 	int n = oldLines.size(), m = newLines.size();
 
 	// Construir tabla LCS
@@ -353,34 +350,34 @@ void printDiff(const std::vector<std::string>& oldLines,
 		setColor(201, 32, 32);	std::cout << "-" << totalRemoved << std::endl << std::endl;
 
 
-    		if (totalAdded > 0 || totalRemoved > 0) {
-        		std::cout << "\n";
-        		setColor(32, 180, 220);
-        		if (!filepath.empty()) {
-            			std::cout << filepath << " | ";
-        		}
-        		std::cout << totalAdded + totalRemoved << " changes: ";
-        
-        		if (totalAdded > 0) {
-            			setColor(32, 180, 32);
-            			std::cout << "+" << totalAdded;
-        		}
-        		if (totalAdded > 0 && totalRemoved > 0) {
-            			resetColor();
-            			std::cout << " ";
-        		}
-		        if (totalRemoved > 0) {
-            			setColor(201, 32, 32);
-            			std::cout << "-" << totalRemoved;
-        		}
-        
-        		// Tamaño del archivo si se proporciona
-        		if (!oldContent.empty() && !newContent.empty()) {
-            			resetColor();
-            			std::cout << " | " << oldContent.size() << " → " << newContent.size() << " bytes";
-        		}
-        		resetColor();
-        		std::cout << "\n";
+			if (totalAdded > 0 || totalRemoved > 0) {
+				std::cout << "\n";
+				setColor(32, 180, 220);
+				if (!filepath.empty()) {
+						std::cout << filepath << " | ";
+				}
+				std::cout << totalAdded + totalRemoved << " changes: ";
+		
+				if (totalAdded > 0) {
+						setColor(32, 180, 32);
+						std::cout << "+" << totalAdded;
+				}
+				if (totalAdded > 0 && totalRemoved > 0) {
+						resetColor();
+						std::cout << " ";
+				}
+				if (totalRemoved > 0) {
+						setColor(201, 32, 32);
+						std::cout << "-" << totalRemoved;
+				}
+		
+				// Tamaño del archivo si se proporciona
+				if (!oldContent.empty() && !newContent.empty()) {
+						resetColor();
+						std::cout << " | " << oldContent.size() << " → " << newContent.size() << " bytes";
+				}
+				resetColor();
+				std::cout << "\n";
 		}
 
 		// Separador entre hunks
@@ -425,7 +422,7 @@ int Mank::diff(const std::string& filepath) {
 	std::cout << "\n";
 
 	printDiff(splitLines(committed), splitLines(current), 
-              filepath, committed, current);
+			  filepath, committed, current);
 
 	Pager::close();
 
@@ -477,17 +474,17 @@ static int diffAll() {
 		Log::info("--- " + path + " (committed)");
 		Log::info("+++ " + path + " (current)");
 		std::cout << "\n";
-	        printDiff(splitLines(committed), splitLines(current), 
-                  path, committed, current);
+			printDiff(splitLines(committed), splitLines(current), 
+				  path, committed, current);
 		totalFiles++;
 		std::cout << "\n";
 	}
 
 	// Git-like summary
 	if (totalFiles > 0) {
-        	std::cout << "\n" << totalFiles << " modified files.";
-        	std::cout << "\n";
-    	}
+			std::cout << "\n" << totalFiles << " modified files.";
+			std::cout << "\n";
+		}
 
 
 	Pager::close();
@@ -778,8 +775,8 @@ static MergeResult mergeFile(const std::string& base,
 
 int Mank::merge(const std::string& branchName) {
 	std::string currentBranch = Objects::getCurrentBranch();
-	std::string currentRef    = Objects::getCurrentRef();
-	std::string theirRef      = ".mank/refs/heads/" + branchName;
+	std::string currentRef	= Objects::getCurrentRef();
+	std::string theirRef	  = ".mank/refs/heads/" + branchName;
 
 	if (!fs::exists(theirRef)) {
 		Log::error("Branch not found: " + branchName);
@@ -832,7 +829,7 @@ int Mank::merge(const std::string& branchName) {
 
 		if (result == MergeResult::Clean) {
 			setColor(32, 180, 32);
-			std::cout << "  ok        ";
+			std::cout << "  ok		";
 			resetColor();
 			std::cout << " " << path << "\n";
 		} else {
@@ -873,137 +870,137 @@ int Mank::merge(const std::string& branchName) {
 }
 
 int Mank::config(const std::string& section, const std::string& key, const std::string& value, bool global) {
-    if (section == "user" && key != "name" && key != "email") {
-        Log::error("Unknown config key: " + key);
-        Log::info(global ? "Valid keys: --config.name, --config.email" : "Valid keys: --gconfig.name, --gconfig.email");
-        return 1;
-    }
+	if (section == "user" && key != "name" && key != "email") {
+		Log::error("Unknown config key: " + key);
+		Log::info(global ? "Valid keys: --config.name, --config.email" : "Valid keys: --gconfig.name, --gconfig.email");
+		return 1;
+	}
 
-    Objects::setConfig(section, key, value, global);
-    Log::log("Config updated: [" + section + "] " + key + " = " + value);
-    return 0;
+	Objects::setConfig(section, key, value, global);
+	Log::log("Config updated: [" + section + "] " + key + " = " + value);
+	return 0;
 }
 
 int Mank::unstage(const std::string& filepath) {
-    auto index = Objects::loadIndex();
+	auto index = Objects::loadIndex();
 
-    if (filepath == ".") {
-        if (index.empty()) {
-            Log::log("Nothing to unstage.");
-            return 0;
-        }
-        index.clear();
-        Log::log("Unstaged all files.");
-    } else {
-        std::string normalized = fs::path(filepath).lexically_normal().string();
-        if (!index.count(normalized)) {
-            Log::error("File not in index: " + normalized);
-            return 1;
-        }
-        index.erase(normalized);
-        Log::log("Unstaged: " + normalized);
-    }
+	if (filepath == ".") {
+		if (index.empty()) {
+			Log::log("Nothing to unstage.");
+			return 0;
+		}
+		index.clear();
+		Log::log("Unstaged all files.");
+	} else {
+		std::string normalized = fs::path(filepath).lexically_normal().string();
+		if (!index.count(normalized)) {
+			Log::error("File not in index: " + normalized);
+			return 1;
+		}
+		index.erase(normalized);
+		Log::log("Unstaged: " + normalized);
+	}
 
-    // Reescribir el índice
-    std::ofstream indexOut(".mank/index", std::ios::trunc);
-    for (const auto& [p, h] : index)
-        indexOut << h << " " << p << "\n";
+	// Reescribir el índice
+	std::ofstream indexOut(".mank/index", std::ios::trunc);
+	for (const auto& [p, h] : index)
+		indexOut << h << " " << p << "\n";
 
-    return 0;
+	return 0;
 }
 
 int Mank::tag(const std::string& name) {
-    // Sin argumento, listar todas las tags
-    if (name.empty()) {
-        auto tags = Objects::listTags();
-        if (tags.empty()) {
-            Log::log("No tags yet.");
-            return 0;
-        }
-        for (const auto& [n, hash] : tags)
-            Log::log(n + " -> " + hash.substr(0, 8) + "...");
-        return 0;
-    }
+	// Sin argumento, listar todas las tags
+	if (name.empty()) {
+		auto tags = Objects::listTags();
+		if (tags.empty()) {
+			Log::log("No tags yet.");
+			return 0;
+		}
+		for (const auto& [n, hash] : tags)
+			Log::log(n + " -> " + hash.substr(0, 8) + "...");
+		return 0;
+	}
 
-    // Comprobar que no existe ya
-    if (!Objects::getTag(name).empty()) {
-        Log::error("Tag already exists: " + name);
-        return 1;
-    }
+	// Comprobar que no existe ya
+	if (!Objects::getTag(name).empty()) {
+		Log::error("Tag already exists: " + name);
+		return 1;
+	}
 
-    // Obtener el commit actual
-    std::ifstream refFile(Objects::getCurrentRef());
-    if (!refFile.is_open()) {
-        Log::error("No commits yet.");
-        return 1;
-    }
-    std::string commitHash;
-    std::getline(refFile, commitHash);
+	// Obtener el commit actual
+	std::ifstream refFile(Objects::getCurrentRef());
+	if (!refFile.is_open()) {
+		Log::error("No commits yet.");
+		return 1;
+	}
+	std::string commitHash;
+	std::getline(refFile, commitHash);
 
-    if (commitHash.empty()) {
-        Log::error("No commits yet.");
-        return 1;
-    }
+	if (commitHash.empty()) {
+		Log::error("No commits yet.");
+		return 1;
+	}
 
-    Objects::createTag(name, commitHash);
-    Log::log("Tag created: " + name + " -> " + commitHash.substr(0, 8) + "...");
-    return 0;
+	Objects::createTag(name, commitHash);
+	Log::log("Tag created: " + name + " -> " + commitHash.substr(0, 8) + "...");
+	return 0;
 }
 
 int Mank::diffCommits(const std::string& hashA, const std::string& hashB) {
-    std::string contentA = Objects::read(hashA);
-    std::string contentB = Objects::read(hashB);
+	std::string contentA = Objects::read(hashA);
+	std::string contentB = Objects::read(hashB);
 
-    if (contentA.empty()) { Log::error("Commit not found: " + hashA); return 1; }
-    if (contentB.empty()) { Log::error("Commit not found: " + hashB); return 1; }
+	if (contentA.empty()) { Log::error("Commit not found: " + hashA); return 1; }
+	if (contentB.empty()) { Log::error("Commit not found: " + hashB); return 1; }
 
-    // Extraer el tree de cada commit
-    auto getTree = [](const std::string& content) {
-        std::istringstream ss(content);
-        std::string line;
-        while (std::getline(ss, line))
-            if (line.substr(0, 5) == "tree ")
-                return line.substr(5);
-        return std::string("");
-    };
+	// Extraer el tree de cada commit
+	auto getTree = [](const std::string& content) {
+		std::istringstream ss(content);
+		std::string line;
+		while (std::getline(ss, line))
+			if (line.substr(0, 5) == "tree ")
+				return line.substr(5);
+		return std::string("");
+	};
 
-    std::string treeA = getTree(contentA);
-    std::string treeB = getTree(contentB);
+	std::string treeA = getTree(contentA);
+	std::string treeB = getTree(contentB);
 
-    if (treeA.empty() || treeB.empty()) {
-        Log::error("Could not read trees from commits.");
-        return 1;
-    }
+	if (treeA.empty() || treeB.empty()) {
+		Log::error("Could not read trees from commits.");
+		return 1;
+	}
 
-    auto filesA = Objects::readTree(treeA);
-    auto filesB = Objects::readTree(treeB);
+	auto filesA = Objects::readTree(treeA);
+	auto filesB = Objects::readTree(treeB);
 
-    Pager::open();
+	Pager::open();
 
-    // Modificados y añadidos
-    for (const auto& [path, hashB_] : filesB) {
-        std::string contentNew = Objects::read(hashB_);
-        std::string contentOld;
+	// Modificados y añadidos
+	for (const auto& [path, hashB_] : filesB) {
+		std::string contentNew = Objects::read(hashB_);
+		std::string contentOld;
 
-        if (filesA.count(path))
-            contentOld = Objects::read(filesA.at(path));
+		if (filesA.count(path))
+			contentOld = Objects::read(filesA.at(path));
 
-        if (contentOld == contentNew) continue;
+		if (contentOld == contentNew) continue;
 
-        Log::info("--- " + path + " (" + hashA.substr(0, 8) + ")");
-        Log::info("+++ " + path + " (" + hashB.substr(0, 8) + ")");
-        std::cout << "\n";
-        printDiff(splitLines(contentOld), splitLines(contentNew),
+		Log::info("--- " + path + " (" + hashA.substr(0, 8) + ")");
+		Log::info("+++ " + path + " (" + hashB.substr(0, 8) + ")");
+		std::cout << "\n";
+		printDiff(splitLines(contentOld), splitLines(contentNew),
 		path, contentOld, contentNew);
-        std::cout << "\n";
-    }
+		std::cout << "\n";
+	}
 
-    // Eliminados
-    for (const auto& [path, _] : filesA) {
-        if (!filesB.count(path))
-            std::cout << ansi::BOLD << ansi::FG_RED << "deleted: " << path << ansi::RESET << "\n";
-    }
+	// Eliminados
+	for (const auto& [path, _] : filesA) {
+		if (!filesB.count(path))
+			std::cout << ansi::BOLD << ansi::FG_RED << "deleted: " << path << ansi::RESET << "\n";
+	}
 
-    Pager::close();
-    return 0;
+	Pager::close();
+	return 0;
 }

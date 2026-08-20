@@ -5,12 +5,12 @@ Each commit stores a snapshot of the staged files along with a
 message, the author name and email, and a timestamp.
 
 Usage:
-    mank commit <message>
-    mank c <message>
+    mank commit <message> [description]
+    mank c <message> [description]
 
 Examples:
     mank commit "fix: correct off-by-one error in parser"
-    mank c "feat: add submodule support"
+    mank c "feat: add submodule support" "It was a long and hard work"
 
 Notes:
     - You must stage files with "mank add" before committing.
@@ -23,3 +23,6 @@ Notes:
           mank config email "you@example.com"
     - If a CI pipeline is configured with "on: commit", it will
       run automatically after a successful commit.
+    - If you don't include any arguments, an editor will open
+      letting you write the title and description of the commit
+      from the terminal.
