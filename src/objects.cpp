@@ -23,6 +23,7 @@
 #include <fstream>
 #include <filesystem>
 #include <sstream>
+#include <fstream>
 #include <iomanip>
 #include <vector>
 #include <ctime>
@@ -189,6 +190,13 @@ std::string Objects::getCurrentRef() {
 	std::string branch = getCurrentBranch();
 	if (branch.empty()) return "";
 	return ".mank/refs/heads/" + branch;
+}
+
+std::string Objects::getHead() {
+	std::fstream f(getCurrentRef());
+	std::string head;
+	std::getline(f, head);
+	return head;
 }
 
 void Objects::saveStash(const std::map<std::string, std::string>& files) {
@@ -452,3 +460,48 @@ void Objects::saveSubmodules(const std::vector<Objects::Submodule>& submodules) 
         out << "\tcommit = " << sub.commit << "\n\n";
     }
 }
+
+// Function to get information about commits
+Commit Objects::getCommitInfo(std::string hash) {
+	std::string content = Objects::read(hash);
+	if (content.empty()) throw std::exception();
+
+	std::string tree, parent, date, message, user, email;
+	std::istringstream ss(content);
+	std::string line;
+	bool readingMessage = false;
+
+	while (std::getline(ss, line)) {
+        	if (line.substr(0, 5) == "tree ")        tree = line.substr(5);
+        	else if (line.substr(0, 7) == "parent ") parent = line.substr(7);
+        	else if (line.substr(0, 5) == "date ")   date = line.substr(5);
+        	else if (line.substr(0, 3) == "by ")     user = line.substr(3);
+       		else if (line.substr(0, 6) == "email ")  email = line.substr(6);
+        	else if (line.empty()) {
+                	readingMessage = true;
+        	} else if(readingMessage) {
+         	       	message += line + "\n";
+        	}
+	}
+
+	// Parse the message to divide title and description
+	std::string title, description;
+	if(message.find("&newline&") != std::string::npos) {
+        	title = message.substr(0,message.find("&newline&"));
+        	description = message.substr(message.find("&newline&") + 9);
+	} else {
+		title = message;
+	}
+
+	Commit cmt;
+	cmt.tree = tree;
+	cmt.parent = parent;
+	cmt.date = date;
+	cmt.title = title;
+	cmt.description = description;
+	cmt.user = user;
+	cmt.email = email;
+
+	return cmt;
+}
+

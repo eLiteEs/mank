@@ -23,6 +23,16 @@
 #include <filesystem>
 #include <map>
 
+struct Commit {
+        std::string tree;
+        std::string parent;
+        std::string date;
+        std::string title;
+        std::string description;
+        std::string user;
+        std::string email;
+};
+
 namespace Objects {
 	std::string hash(const std::string& content);
 	void store(const std::string& hash, const std::string& content);
@@ -35,6 +45,7 @@ namespace Objects {
 	std::string readFile(const std::string& path);
 	std::string getCurrentBranch();
 	std::string getCurrentRef();
+	std::string getHead();
 	void saveStash(const std::map<std::string, std::string>& files);
 	std::map<std::string, std::string> loadStash();
 	std::vector<std::string> getHistory(const std::string& branchRef);
@@ -56,6 +67,8 @@ namespace Objects {
 
 	std::vector<Submodule> loadSubmodules();
 	void saveSubmodules(const std::vector<Submodule>& submodules);
+
+	Commit getCommitInfo(std::string hash);
 }
 
 

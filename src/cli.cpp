@@ -249,8 +249,14 @@ int diff(const std::vector<std::string>& args) {
 			std::cout << ansi::FG_RED << "Usage: mank diff --commits <hash1> <hash2>" << ansi::RESET << std::endl;
 			return 1;
 		}
-		
-		return Mank::diffCommits(args[1], args[2]);
+
+		std::string second = args[2];	
+
+		if(second == "latest") {
+			second = Objects::getHead();
+		} 
+	
+		return Mank::diffCommits(args[1], second);
 	}
 
 	return Mank::diff(args[0]);
