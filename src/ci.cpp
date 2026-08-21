@@ -607,7 +607,6 @@ int Mank::ci(const std::vector<std::string>& args, const std::string& trigger) {
     if (subcommand == "run") {
         auto allPipelines = parseAllPipelines();
         if (allPipelines.empty()) {
-            Log::log("No pipelines found.");
             return 1;
         }
 
