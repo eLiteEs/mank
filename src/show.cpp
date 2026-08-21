@@ -29,31 +29,18 @@
 #include "pager.hpp"
 #include "decorations.hpp"
 
-int Mank::show(const std::string& hash) {
+int Mank::show(const std::string& hashArg) {
+	std::string hash = hashArg;
+	if(hash == "latest") hash = Objects::getHead(); // If the user wants the latest commit. give the head
+	
 	std::string content = Objects::read(hash);
 	if (content.empty()) {
 		Log::error("Object not found: " + hash);
 		return 1;
 	}
 
-	std::istringstream ss(content);
-	std::string line;
-	std::string tree, parent, date, author, email, message;
-
-	while (std::getline(ss, line)) {
-		if (line.empty()) {
-			std::ostringstream msg;
-			while (std::getline(ss, line))
-				msg << line << "\n";
-			message = msg.str();
-			break;
-		}
-		if (line.substr(0, 5) == "tree ")   tree   = line.substr(5);
-		if (line.substr(0, 7) == "parent ") parent = line.substr(7);
-		if (line.substr(0, 5) == "date ")   date   = line.substr(5);
-		if (line.substr(0, 3) == "by ")	 author = line.substr(3);
-		if (line.substr(0, 6) == "email ")  email  = line.substr(6);
-	}
+	Commit cmt = Objects::getCommitInfo(hash);
+	std::string tree = cmt.tree, parent = cmt.parent, date = cmt.date, author = cmt.user, email = cmt.email, title = cmt.title, description = cmt.description, line;
 
 	Pager::open();
 
@@ -106,7 +93,8 @@ int Mank::show(const std::string& hash) {
 	if (!foundTag) std::cout << "(none)";
 	std::cout << "\n\n";
 
-	std::cout << "	" << message << "\n";
+	std::cout << (description.empty() ? "" : std::string(ansi::BOLD)) << title << "\n"
+		  << description << (description.empty() ? "" : "\n");
 
 	if (!parent.empty()) {
 		auto treeNew = Objects::readTree(tree);
@@ -210,31 +198,9 @@ int Mank::show(const std::string& hash) {
 		}
 		std::cout << "\n";
 
-		std::cout << ansi::BOLD << "Detailed diff:" 
-				  << ansi::RESET << "\n\n";
+		std::cout << ansi::BOLD << "Detailed diff: Use mank d --commits " << hash << " " << Objects::getDadCommit(hash)
+				  << ansi::RESET << "\n";
 		
-		for (const auto& [path, newHash] : treeNew) {
-			std::string newContent = Objects::read(newHash);
-			std::string oldContent;
-
-			if (treeOld.count(path)) {
-				oldContent = Objects::read(treeOld[path]);
-				if (oldContent == newContent) continue;
-			}
-
-			std::cout << ansi::BOLD << "--- " << path << " (before)\n";
-			std::cout << "+++ " << path << " (after)\n" << ansi::RESET;
-			printDiff(splitLines(oldContent), splitLines(newContent),
-					  path, oldContent, newContent);
-			std::cout << "\n";
-		}
-
-		for (const auto& [path, oldHash] : treeOld) {
-			if (!treeNew.count(path)) {
-				std::cout << ansi::BOLD << ansi::FG_RED 
-					  << "removed: " << path << ansi::RESET << "\n";
-			}
-		}
 	}
 
 	Pager::close();

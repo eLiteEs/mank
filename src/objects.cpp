@@ -18,6 +18,8 @@
  */
 
 #include "objects.hpp"
+
+#include <iostream>
 #include <openssl/sha.h>
 #include <zlib.h>
 #include <fstream>
@@ -505,3 +507,59 @@ Commit Objects::getCommitInfo(std::string hash) {
 	return cmt;
 }
 
+std::vector<std::string> getHashHistory() {
+	std::ifstream refFile(Objects::getCurrentRef());
+
+	std::string current;
+	std::getline(refFile, current);
+
+	std::vector<std::string> ret;
+
+	while (!current.empty()) {
+		ret.push_back(current);		
+
+		current = Objects::getCommitInfo(current).parent;
+	}
+
+	return ret;
+}
+
+std::string Objects::getSonCommit(std::string hash) {
+	int ind = -1;
+	
+	std::vector<std::string> history = getHashHistory();
+
+	for(int i = 0; i < history.size(); i++) {
+		if(history[i] == hash) {
+			ind = i;
+		}
+	}
+
+	if(ind == -1) return "not.found";
+
+	try {
+		return history[ind - 1];	
+	} catch(...) {
+		return "virgin.commit";
+	}
+}
+
+std::string Objects::getDadCommit(std::string hash) {
+	int ind = -1;
+	
+	std::vector<std::string> history = getHashHistory();
+
+	for(int i = 0; i < history.size(); i++) {
+		if(history[i] == hash) {
+			ind = i;
+		}
+	}
+
+	if(ind == -1) return "not.found";
+
+	try {
+		return history[ind - 1];	
+	} catch(...) {
+		return "orphan.commit";
+	}
+}

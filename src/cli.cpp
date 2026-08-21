@@ -396,8 +396,6 @@ int show(const std::vector<std::string>& args) {
 		return 1;
 	}
 
-	std::cout << "!" << std::endl;
-
 	return Mank::show(args[0]);
 }
 

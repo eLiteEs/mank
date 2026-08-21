@@ -381,7 +381,7 @@ void printDiff(const std::vector<std::string>& oldLines,
 				// Tamaño del archivo si se proporciona
 				if (!oldContent.empty() && !newContent.empty()) {
 						resetColor();
-						std::cout << " | " << oldContent.size() << " → " << newContent.size() << " bytes";
+						std::cout << " | " << oldContent.size() << " -> " << newContent.size() << " bytes";
 				}
 				resetColor();
 				std::cout << "\n";
