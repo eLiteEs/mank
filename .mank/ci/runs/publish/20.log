@@ -10,3 +10,19 @@ $ git add .
 git commit -m "auto-update from mank"
 git push
 
+[main 25b1142] auto-update from mank
+ 14 files changed, 326 insertions(+), 261 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/20.log
+ create mode 100644 .mank/objects/47/2b95fff900d33c
+ create mode 100644 .mank/objects/a5/4b10d9154c6af6
+ create mode 100644 .mank/objects/b2/a338ae2108ae78
+ create mode 100644 .mank/objects/c5/6dd3f73a8d4633
+ create mode 100644 .mank/objects/df/f97d7f4379a5ce
+ create mode 100644 .mank/objects/ff/af2281e3e70fee
+ssh: Could not resolve hostname codeberg.org: Temporary failure in name resolution
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+--- Exit code: 128 ---
