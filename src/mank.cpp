@@ -105,7 +105,7 @@ int Mank::commit(const std::string& message) {
 	// 6. Clean index
 	std::ofstream(".mank/index", std::ios::trunc).close();
 
-	Log::log("Commit: " + commitHash.substr(0, 8) + " - " + message);
+	Log::log("Commit: " + commitHash.substr(0, 8) + " - " + (message.find("&newline&") == std::string::npos ? message : message.substr(0, message.find("&newline&"))));
 
 	Mank::ci({"run"}, "commit");
 	return 0;
@@ -123,6 +123,8 @@ int Mank::history(bool oneline) {
 
 	Pager::open();
 
+	bool first = true;
+
 	while (!current.empty()) {
 		std::string content = Objects::read(current);
 		if (content.empty()) break;
@@ -130,6 +132,7 @@ int Mank::history(bool oneline) {
 		std::string tree, parent, date, message, user, email, msg;
 		std::istringstream ss(content);
 		std::string line;
+		bool readingMessage = false;
 
 		while (std::getline(ss, line)) {
 			if (line.substr(0, 5) == "tree ") 	 tree = line.substr(5);
@@ -138,9 +141,10 @@ int Mank::history(bool oneline) {
 			else if (line.substr(0, 3) == "by ")	 user = line.substr(3);
 			else if (line.substr(0, 6) == "email ")  email = line.substr(6);
 			else if (line.empty()) {
-				std::getline(ss, message);
-				break;
-			} 
+				readingMessage = true;
+			} else if(readingMessage) {
+				message += line + "\n";				
+			}
 		}
 
 		// Parse the message to divide title and description
@@ -156,6 +160,13 @@ int Mank::history(bool oneline) {
 			std::cout << ansi::FG_CYAN << current.substr(0, 8) 
 				  << ansi::RESET << " " << title << "\n";
 		} else {
+			std::string bar(45, (char) 32);
+			std::cout << ansi::UNDERLINE
+				  << (!first ? bar : "") 
+				  << ansi::RESET << (!first ? "\n\n" : "");
+
+			first = false;		
+
 			std::cout << ansi::FG_YELLOW << "commit " << ansi::BOLD << current.substr(0, 16) 
 				  << ansi::RESET << "\n";
 			
@@ -168,19 +179,15 @@ int Mank::history(bool oneline) {
 			}
 			
 			std::cout << ansi::BOLD << "Author: " << ansi::RESET 
-				  << user << " <" << email << ">\n";
+				  << (user.empty() ? std::string(ansi::DIM) + "anonymous" + std::string(ansi::RESET) : user) 
+				  << " <" << (email.empty() ? std::string(ansi::DIM) + "no email" + std::string(ansi::RESET) : email) << ">\n";
 			
 			time_t t = std::stol(date);
-			std::cout << ansi::BOLD << "Date:   " << ansi::RESET 
+			std::cout << ansi::BOLD << "Date:   " << ansi::RESET
 				  << std::ctime(&t);
 
-			std::cout << (!description.empty() ? ansi::BOLD : "") << title << std::endl
-				  << description << (!description.empty() ? "\n" : "");
-		   
-			std::string bar(45, (char) 32);
-			std::cout << ansi::UNDERLINE 
-				  << bar 
-				  << ansi::RESET << "\n\n";
+			std::cout << (!description.empty() ? ansi::BOLD : "") << title << (!description.empty() ? "\n" : "")
+				  << description;
 		}
 
 		current = parent;
