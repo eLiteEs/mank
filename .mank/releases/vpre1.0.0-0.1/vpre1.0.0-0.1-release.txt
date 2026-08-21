@@ -1,0 +1,52 @@
+Release vpre1.0.0-0.1
+Date: Fri Aug 21 17:52:32 2026
+Commit: 7fb39115b044284a
+
+== Contributors ==
+  - blasf
+  - Blas Fernández
+  - 
+
+== Commits ==
+  867b0701 fix: oneline now uses one line again
+  eb79fb29 fix: now history is shown better
+  ffaf2281 update: now commits are better
+  42ebd946 update: now help looks better
+  9b52219a reworked the cli and fixed some bugs
+  4022e5a5 recover: damn this project is tuff
+  b98476f2 update: better workflows
+  53ead87f update: updated log and show styles
+  45bc2488 update: now diff looks better
+  7fb39115 update: now the SHA-256 of the commits is displayed better
+  063ed6e5 fix: updated version and added YEAR variable
+  e2051a52 fix: now global config and that stuff works properly
+  5b09dd34 fix: now the name in the global config is written correctly
+  94fec83e fix: now my user isn't on the repo anymore
+  19a92b5d i don't know actually
+  3f968e79 update README.MD
+  6c2ef66c fix: now if you insert an invalid argument, not only not inside mank repository is logged
+  ef21d759 update: better Makefile
+  46123038 fix: now you can write global config directly from cli
+  735caa28 fix: now ci supports more than one command
+
+== Changelog ==
+- 867b0701 fix: oneline now uses one line again
+- eb79fb29 fix: now history is shown better
+- ffaf2281 update: now commits are better
+- 42ebd946 update: now help looks better
+- 9b52219a reworked the cli and fixed some bugs
+- 4022e5a5 recover: damn this project is tuff
+- b98476f2 update: better workflows
+- 53ead87f update: updated log and show styles
+- 45bc2488 update: now diff looks better
+- 7fb39115 update: now the SHA-256 of the commits is displayed better
+- 063ed6e5 fix: updated version and added YEAR variable
+- e2051a52 fix: now global config and that stuff works properly
+- 5b09dd34 fix: now the name in the global config is written correctly
+- 94fec83e fix: now my user isn't on the repo anymore
+- 19a92b5d i don't know actually
+- 3f968e79 update README.MD
+- 6c2ef66c fix: now if you insert an invalid argument, not only not inside mank repository is logged
+- ef21d759 update: better Makefile
+- 46123038 fix: now you can write global config directly from cli
+- 735caa28 fix: now ci supports more than one command

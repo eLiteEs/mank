@@ -7,6 +7,6 @@ jobs:
   publish:
     run: |
       git add .
-      git commit -m "auto-update from mank"
+      git commit -m "auto-update from mank. commit: $MANK_COMMIT_SHORT"
       git push
 
