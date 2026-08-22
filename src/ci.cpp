@@ -92,7 +92,6 @@ static std::map<std::string, std::string> getMankEnv() {
 		system(("notify-send "  + hash).c_str());
 		env["MANK_COMMIT"] = hash;
 		env["MANK_COMMIT_SHORT"] = hash.substr(0, 8);
-		env["MANK_COMMIT_NAME"] = Objects::getCommitInfo(hash).title;
 	}
 	
 	// Último tag (si existe)
