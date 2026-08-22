@@ -37,14 +37,14 @@ This automatically installs mank in Linux for bash, if you use other shells, you
 
 ## Quick start
 ```bash
-mank init                          # initialize a repository
-mank --config.name "Your Name"     # set your name
-mank --config.email "you@mail.com" # set your email
+mank init                                      # initialize a repository
+mank config user.name "Your Name" --global     # set your name
+mank config user.email "you@mail.com" --global # set your email
 
-mank add .                         # stage all files
-mank commit "first commit"         # create a commit
-mank log                           # view history
-mank diff .                        # view changes
+mank add .                                     # stage all files
+mank commit "first commit"                     # create a commit
+mank log                                       # view history
+mank diff .                                    # view changes
 ```
 
 ## Commands
