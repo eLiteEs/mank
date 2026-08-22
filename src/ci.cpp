@@ -18,9 +18,11 @@
  */
 
 #include "mank.hpp"
+
 #include "objects.hpp"
 #include "log.hpp"
 #include "decorations.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -89,6 +91,7 @@ static std::map<std::string, std::string> getMankEnv() {
         std::getline(refFile, hash);
         env["MANK_COMMIT"] = hash;
         env["MANK_COMMIT_SHORT"] = hash.substr(0, 8);
+	env["MANK_COMMIT_TITLE"] = Objects::getCommitInfo(hash).title;
     }
     
     // Último tag (si existe)
