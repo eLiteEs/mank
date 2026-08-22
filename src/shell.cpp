@@ -39,7 +39,6 @@ std::vector<std::string> splitStringOutsideQuotes(const std::string& str, char c
         for (size_t i = 0; i < str.size(); ++i) {
                 if (str[i] == '\"') {
                         inQuotes = !inQuotes;
-                        temp += str[i];
                 } else if(str[i] == '(' && !inQuotes) {
                         parenthesesDepth++;
                         temp += "(";
@@ -88,6 +87,7 @@ int Mank::shell(const std::vector<std::string>& args) {
 
 		std::cout << ansi::RESET;
 		
+		if(line.empty()) continue;	
 		if(line == "quit" || line == "q") break;
 
 		std::vector<std::string> parsedCommand = splitStringOutsideQuotes(line, ' ');
