@@ -47,6 +47,10 @@
 
 // Main entry point
 int main(int argc, char** argv) {
+	#ifdef SHELL
+		return Mank::shell({""});
+	#endif
+
 	// Check if any argument was introduced to the program
 	if(argc < 2) {
 		// No argument was introduced, open shell

@@ -1,6 +1,7 @@
 PREFIX := $(HOME)/.local
-BINARY := build/mank
 MAN_DIR := man
+BINARY := build/mank
+BINARY_SHELL := build/mksh
 
 .PHONY: all build configure install uninstall clean
 
@@ -14,7 +15,8 @@ build: configure
 
 install: build
 	@echo "Installing mank..."
-	install -Dm755 $(BINARY) $(PREFIX)/bin/mank
+	install -m 755 $(BINARY) $(PREFIX)/bin/
+	install -m 755  $(BINARY_SHELL) $(PREFIX)/bin/
 	mkdir -p $(PREFIX)/bin/man
 	cp $(MAN_DIR)/* $(PREFIX)/bin/man/
 	@if ! grep -q 'MANK_MAN_PATH' ~/.bashrc; then \
@@ -25,6 +27,7 @@ install: build
 uninstall:
 	@echo "Uninstalling mank..."
 	rm -f $(PREFIX)/bin/mank
+	rm -f $(PREFIX)/bin/mksh
 	rm -rf $(PREFIX)/bin/man
 	@sed -i '/MANK_MAN_PATH/d' ~/.bashrc
 	@echo "Done."

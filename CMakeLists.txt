@@ -12,6 +12,7 @@ pkg_check_modules(LIBZIP REQUIRED libzip)
 file(GLOB SRCS "src/*.cpp")
 
 add_executable(mank ${SRCS})
+add_executable(mksh ${SRCS})
 
 target_link_libraries(mank PRIVATE
     OpenSSL::SSL
@@ -26,5 +27,19 @@ target_include_directories(mank PRIVATE
     ${LIBZIP_INCLUDE_DIRS}
 )
 
+target_link_libraries(mksh PRIVATE
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    ZLIB::ZLIB
+    ${LIBZIP_LIBRARIES}
+    yaml-cpp
+)
+
+target_include_directories(mksh PRIVATE
+    include/
+    ${LIBZIP_INCLUDE_DIRS}
+)
 
 target_compile_options(mank PRIVATE -Wall -Wextra -g)
+target_compile_options(mksh PRIVATE -DSHELL)
+

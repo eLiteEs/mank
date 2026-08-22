@@ -66,22 +66,24 @@ std::vector<std::string> splitStringOutsideQuotes(const std::string& str, char c
 // Interactive mank shell
 int Mank::shell(const std::vector<std::string>& args) {
 	std::cout << ansi::BOLD << "mank " << VERSION << ansi::RESET << " (c) " << YEAR << " Blas Fernández" << std::endl
-		  << "Welcome to the interactive shell. Here you can use mank commands directly from this CLI." 
+		  << "Welcome to the interactive shell. Here you can use mank commands directly from this CLI." << std::endl 
 		  << "Use \"quit\" to leave." << std::endl;
 
 	if(Objects::isRepo()) {
 		std::cout << "Inside repository: " << Objects::getConfig("core", "name") << std::endl
 			  << "Latest commit: " << Objects::getHead() << std::endl
 			  << "  by: " << Objects::getCommitInfo(Objects::getHead()).user << " <" << Objects::getCommitInfo(Objects::getHead()).email << ">" << std::endl
-			  << "  " << Objects::getCommitInfo(Objects::getHead()).title;
+			  << "  " << Objects::getCommitInfo(Objects::getHead()).title << (Objects::getCommitInfo(Objects::getHead()).description.empty() ? "\n" : "");
 	} else {
-		std::cout << "Not inside a mank repo. Create one using \"init\".";
+		std::cout << "Not inside a mank repo. Create one using \"init\"." << std::endl;
 	}
+
+	std::cout << std::endl;
 
 	std::string line;
 
 	while(true) {
-		std::cout << std::endl << "mank" << (Objects::isRepo() ? "[" + Objects::getCurrentBranch() + "]" : "") << "> " << ansi::FG_CYAN;
+		std::cout << "mank" << (Objects::isRepo() ? "[" + Objects::getCurrentBranch() + "]" : "") << "> " << ansi::FG_CYAN;
 		std::getline(std::cin, line);
 
 		std::cout << ansi::RESET;

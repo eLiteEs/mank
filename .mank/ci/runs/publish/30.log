@@ -10,3 +10,23 @@ $ git add .
 git commit -m "auto-update from mank. commit: $MANK_COMMIT_SHORT"
 git push
 
+[main ee99d59] auto-update from mank. commit: 43fa8f71
+ 21 files changed, 149 insertions(+), 7 deletions(-)
+ create mode 100644 .mank/ci/runs/publish/30.log
+ create mode 100644 .mank/objects/3a/6faea204eff752
+ create mode 100644 .mank/objects/43/fa8f7195c888ab
+ create mode 100644 .mank/objects/53/6e6d9acd395e7a
+ create mode 100644 .mank/objects/5d/1b6fd401835840
+ create mode 100644 .mank/objects/5e/33dfffc5384744
+ create mode 100644 .mank/objects/64/13b72adc3f73cf
+ create mode 100644 .mank/objects/c4/4f8884c2e47839
+ create mode 100644 .mank/objects/c4/9d236c496fcaaf
+ create mode 100644 .mank/objects/c7/f05f1693c16817
+ create mode 100644 .mank/objects/d2/81e0b37d3cf6f2
+ create mode 100644 .mank/objects/d4/5be73929416439
+ create mode 100644 .mank/objects/e8/d1e051e1a615e2
+ create mode 100644 src/shell.cpp
+To ssh://codeberg.org/blasf/mank.git
+   308a421..ee99d59  main -> main
+
+--- Exit code: 0 ---
