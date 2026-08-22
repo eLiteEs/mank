@@ -32,6 +32,7 @@ std::string(ansi::BOLD) + "\n- Manage the repository ----------------\n" + std::
 std::string(ansi::BOLD) + "mank init | i [directory]" + std::string(ansi::RESET) + " >> Initialize a mank repository in the current directory or in a specific folder.\n" +
 std::string(ansi::BOLD) + "mank log | l" + std::string(ansi::RESET) + " >> Display the commit history.\n" +
 std::string(ansi::BOLD) + "	        --oneline" + std::string(ansi::RESET) + " >> Display compact commit history.\n" +
+std::string(ansi::BOLD) + "mank lo " + std::string(ansi::RESET) + " >> Display compact commit history.\n" +
 std::string(ansi::BOLD) + "mank status | s" + std::string(ansi::RESET) + " >> Show the status of staged and unstaged changes.\n" +
 std::string(ansi::BOLD) + "mank pack [--full]" + std::string(ansi::RESET) + " >> Pack the source of the last commit. Use --full to include the entire history.\n" +
 std::string(ansi::BOLD) + "mank unpack <file.mank-pack>" + std::string(ansi::RESET) + " >> Unpack a mank pack file in the current directory.\n" +

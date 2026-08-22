@@ -114,7 +114,6 @@ int config(const std::vector<std::string>& args) {
 		// Write the config
 		return Mank::config("core", "name", args[1]);
 	}
-
 	std::cout << ansi::FG_RED << "Invalid config key. Use \"user.email\", \"user.name\" or \"repo.name\"." << ansi::RESET << std::endl;
 	return 1;
 }
@@ -217,6 +216,16 @@ int log(const std::vector<std::string>& args) {
 	if (!args.empty() && args[0] == "--oneline")
                 return Mank::history(true); // Show the history with one line by commit
         return Mank::history(); // Show the normal history
+}
+
+int logOneLine(const std::vector<std::string>& args) {
+	// As you need to be inside a mank repo to use this command, check it
+	if(!Objects::isRepo()) {
+		std::cout << ansi::FG_RED << "You must be inside a mank repo to use this command." << ansi::RESET << std::endl;
+		return 1;
+	}
+
+        return Mank::history(true); // Show the oneline history
 }
 
 // Repo status

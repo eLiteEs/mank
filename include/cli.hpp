@@ -34,6 +34,7 @@ namespace Command {
 	int man(const std::vector<std::string>& args);
 	int add(const std::vector<std::string>& args);
 	int commit(const std::vector<std::string>& args);
+	int logOneLine(const std::vector<std::string>& args);
 	int log(const std::vector<std::string>& args);
 	int status(const std::vector<std::string>& args);
 	int diff(const std::vector<std::string>& args);
@@ -62,6 +63,7 @@ static const std::unordered_map<std::string, CommandFn> commands = {
 	{"add", Command::add}, {"a", Command::add},
 	{"commit", Command::commit}, {"c", Command::commit},
 	{"log", Command::log}, {"l", Command::log},
+	{"lo", Command::logOneLine},
 	{"status", Command::status}, {"s", Command::status},
 	{"diff", Command::diff}, {"d", Command::diff},
 	{"branch", Command::branch}, {"b", Command::branch},

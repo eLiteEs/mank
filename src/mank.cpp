@@ -158,7 +158,7 @@ int Mank::history(bool oneline) {
 
 		if (oneline) {
 			std::cout << ansi::FG_CYAN << current.substr(0, 8) 
-				  << ansi::RESET << " " << title;
+				  << ansi::RESET << " " << title << (description.empty() ? "" : "\n");
 		} else {
 			std::string bar(45, (char) 32);
 			std::cout << ansi::UNDERLINE
