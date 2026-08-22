@@ -17,5 +17,5 @@
  *
  */
 
-#define VERSION "vpre1.0.0-0.1"
+#define VERSION "vpre1.0.0-0.2"
 #define YEAR "2026"
