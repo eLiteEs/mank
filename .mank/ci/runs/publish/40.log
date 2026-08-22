@@ -1,0 +1,13 @@
+=== Pipeline: Publish ===
+Job: publish
+Run: 40
+Date: Sat Aug 22 22:04:51 2026
+Branch: main
+Commit: d5f44e13 feat: added MANK_COMMIT_TITLE env to CI
+
+---
+
+$ notify-send "auto-update [$MANK_COMMIT_SHORT] $MANK_COMMIT_NAME"
+
+
+--- Exit code: 0 ---
