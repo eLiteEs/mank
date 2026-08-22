@@ -71,6 +71,7 @@ namespace Objects {
 	Commit getCommitInfo(std::string hash);
 	std::string getSonCommit(std::string hash);
 	std::string getDadCommit(std::string hash);
+	std::string resolveHash(std::string hash);
 }
 
 

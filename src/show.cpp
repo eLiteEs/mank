@@ -197,8 +197,8 @@ int Mank::show(const std::string& hashArg) {
 			}
 		}
 		std::cout << "\n";
-
-		std::cout << ansi::BOLD << "Detailed diff: Use mank d --commits " << hash << " " << Objects::getDadCommit(hash)
+		
+		std::cout << ansi::BOLD << "Detailed diff: Use mank d --commits " << Objects::getDadCommit(hash).substr(0,8) << " " << hash
 				  << ansi::RESET << "\n";
 		
 	}

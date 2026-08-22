@@ -539,6 +539,45 @@ Commit Objects::getCommitInfo(std::string hash) {
 	return cmt;
 }
 
+std::string Objects::resolveHash(const std::string hash) {
+	if(hash.size() < 16) {
+		if(hash.size() != 8) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: hash too short (it has to be 6 or 16 chars long)." << ansi::RESET << std::endl;
+			return "not.enough.chars";
+		}
+
+		std::string longHash = hash;
+
+		if(!fs::exists(".mank/objects/" + hash.substr(0,2))) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: .mank/objects/" << hash.substr(0,2) << " doesn't exist." << ansi::RESET << std::endl;
+			return "not.found"; 
+		}
+
+		int count = 0;
+
+		for(const auto& entry : fs::directory_iterator(".mank/objects/" + hash.substr(0,2))) {
+			if(entry.path().filename().string().substr(0,6) == hash.substr(2)) {
+				longHash = hash.substr(0,2) + entry.path().filename().string();
+				count++;
+			}
+		}
+
+		if(hash.size() == longHash.size()) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: Didn't found any hash inside " << hash.substr(0,2) << "." << ansi::RESET << std::endl;
+			return "not.found";
+		}
+
+		if(count != 1) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: Ambiguous (more than one found)." << ansi::RESET << std::endl;
+			return "ambiguous";
+		}
+
+		return longHash;
+	}
+
+	return hash;
+}
+
 std::vector<std::string> getHashHistory() {
 	std::ifstream refFile(Objects::getCurrentRef());
 
@@ -557,6 +596,8 @@ std::vector<std::string> getHashHistory() {
 }
 
 std::string Objects::getSonCommit(std::string hash) {
+	if(hash.size() < 16) hash = resolveHash(hash);
+
 	int ind = -1;
 	
 	std::vector<std::string> history = getHashHistory();
@@ -577,8 +618,9 @@ std::string Objects::getSonCommit(std::string hash) {
 }
 
 std::string Objects::getDadCommit(std::string hash) {
+	if(hash.size() < 16) hash = resolveHash(hash);
+
 	int ind = -1;
-	
 	std::vector<std::string> history = getHashHistory();
 
 	for(int i = 0; i < history.size(); i++) {
@@ -590,7 +632,7 @@ std::string Objects::getDadCommit(std::string hash) {
 	if(ind == -1) return "not.found";
 
 	try {
-		return history[ind - 1];	
+		return history[ind + 1];	
 	} catch(...) {
 		return "orphan.commit";
 	}

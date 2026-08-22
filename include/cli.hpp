@@ -75,7 +75,7 @@ static const std::unordered_map<std::string, CommandFn> commands = {
 	{"merge", Command::merge}, {"mg", Command::merge},
 	{"unstage", Command::unstage}, {"u", Command::unstage},
 	{"tag", Command::tag}, {"t", Command::tag},
-	{"show", Command::show},
+	{"show", Command::show}, {"se", Command::show},
 	{"checkout", Command::checkout}, {"co", Command::checkout},
 	{"release", Command::release},
 	{"pack", Command::pack},
