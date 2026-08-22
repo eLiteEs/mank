@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "mank.hpp"
+
 #include <unordered_map>
 #include <functional>
 #include <vector>
@@ -79,6 +81,7 @@ static const std::unordered_map<std::string, CommandFn> commands = {
 	{"pack", Command::pack},
 	{"unpack", Command::unpack},
 	{"ci", Command::ci},
-	{"submodule", Command::submodule}, {"sm", Command::submodule}
+	{"submodule", Command::submodule}, {"sm", Command::submodule},
+	{"shell", Mank::shell}, {"sh", Mank::shell}
 };
 

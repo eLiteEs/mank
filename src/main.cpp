@@ -43,15 +43,14 @@
 
 #include "log.hpp"
 #include "cli.hpp"
+#include "mank.hpp"
 
 // Main entry point
 int main(int argc, char** argv) {
 	// Check if any argument was introduced to the program
 	if(argc < 2) {
-		// No argument was introduced, show an error
-		Log::error("Usage: mank <command>");
-		Log::info("If you need help, use \"mank help\"");
-		return 1;
+		// No argument was introduced, open shell
+		return Mank::shell({""});
 	}
 
 	std::string command = argv[1]; // First argument given to the program

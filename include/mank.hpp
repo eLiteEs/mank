@@ -46,6 +46,7 @@ struct Mank {
 	static int unpack(const std::string& packFile);
 	static int ci(const std::vector<std::string>& args, const std::string& trigger = "");
 	static int submodule(const std::vector<std::string>& args);
+	static int shell(const std::vector<std::string>& args);
 };
 
 std::vector<std::string> splitLines(const std::string& s);

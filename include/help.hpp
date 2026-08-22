@@ -28,6 +28,7 @@ std::string(ansi::BOLD) + "- Basic mank commands ------------------\n" + std::st
 std::string(ansi::BOLD) + "mank help" + std::string(ansi::RESET) + " >> Show this help.\n" +
 std::string(ansi::BOLD) + "mank version | v" + std::string(ansi::RESET) + " >> Show mank's version\n" +
 std::string(ansi::BOLD) + "mank config <config> <value>" + std::string(ansi::RESET) + " >> Change a mank configuration to another value\n" +
+std::string(ansi::BOLD) + "mank shell | sh" + std::string(ansi::RESET) + " >> Open interactive shell\n" +
 std::string(ansi::BOLD) + "\n- Manage the repository ----------------\n" + std::string(ansi::RESET) + 
 std::string(ansi::BOLD) + "mank init | i [directory]" + std::string(ansi::RESET) + " >> Initialize a mank repository in the current directory or in a specific folder.\n" +
 std::string(ansi::BOLD) + "mank log | l" + std::string(ansi::RESET) + " >> Display the commit history.\n" +
