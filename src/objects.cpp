@@ -19,6 +19,8 @@
 
 #include "objects.hpp"
 
+#include "decorations.hpp"
+
 #include <iostream>
 #include <openssl/sha.h>
 #include <zlib.h>
@@ -98,6 +100,36 @@ std::string Objects::createCommit(const std::string& tree, const std::string& pa
 }
 
 std::string Objects::read(const std::string& hash) {
+	if(hash.size() < 16) {
+		std::string longHash = hash;
+
+		if(!fs::exists(".mank/objects/" + hash.substr(0,2))) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: .mank/objects/" << hash.substr(0,2) << " doesn't exist." << ansi::RESET << std::endl;
+			return "not.found"; 
+		}
+
+		int count = 0;
+
+		for(const auto& entry : fs::directory_iterator(".mank/objects/" + hash.substr(0,2))) {
+			if(entry.path().filename().string().substr(0,6) == hash.substr(2)) {
+				longHash = hash.substr(0,2) + entry.path().filename().string();
+				count++;
+			}
+		}
+
+		if(hash.size() == longHash.size()) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: Didn't found any hash inside " << hash.substr(0,2) << "." << ansi::RESET << std::endl;
+			return "not.found";
+		}
+
+		if(count != 1) {
+			std::cout << ansi::FG_RED << "Cannot resolve long hash: Ambiguous (more than one found)." << ansi::RESET << std::endl;
+			return "ambiguous";
+		}
+
+		return Objects::read(longHash);
+	}
+
 	fs::path file = fs::path(".mank") / "objects" / hash.substr(0, 2) / hash.substr(2);
 
 	if (!fs::exists(file)) return "";

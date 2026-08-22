@@ -984,7 +984,9 @@ int Mank::diffCommits(const std::string& hashA, const std::string& hashB) {
 
 	Pager::open();
 
-	std::cout << "Comparing " << ansi::FG_RED << Objects::getCommitInfo(hashA).title << ansi::RESET << " with ...+" << ansi::FG_GREEN << Objects::getCommitInfo(hashB).title << ansi::RESET << "." << std::endl;
+	std::string titleA = Objects::getCommitInfo(hashA).title;
+
+	std::cout << "Comparing " << ansi::FG_RED << (titleA.at(titleA.size() - 1) == '\n' ? titleA.substr(0, titleA.size() - 1) : titleA) << ansi::RESET << " with ..." << ansi::FG_GREEN << Objects::getCommitInfo(hashB).title << ansi::RESET << "." << std::endl;
 
 	// Modificados y añadidos
 	for (const auto& [path, hashB_] : filesB) {
